@@ -1,0 +1,25 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping>
+   <class name = "POJOs.Ejercicio" table = "ejercicios">
+      
+      <meta attribute = "class-description">
+         This class contains the employee detail. 
+      </meta>
+      
+      <id name = "id" type = "int" column = "id">
+         <generator class="native"/>
+      </id>
+      
+      <property name = "idEntrenamiento" column = "id_entrenamiento" type = "int"/>
+      <property name = "nombre" column = "nombre" type = "string"/>
+      <property name = "variante" column = "variante" type = "string"/>
+      <property name = "orden" column = "orden" type = "int"/>
+      <property name = "descripcion" column = "descripcion" type = "string"/>
+      
+   </class>
+</hibernate-mapping>
+
