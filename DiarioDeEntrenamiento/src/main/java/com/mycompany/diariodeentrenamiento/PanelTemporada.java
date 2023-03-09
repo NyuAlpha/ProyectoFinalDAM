@@ -13,19 +13,19 @@ import java.awt.event.MouseListener;
  */
 public class PanelTemporada extends PanelDatos {
     
-    public PanelTemporada(Temporada temporada,MouseListener listener,GUI interfaz){
+    public PanelTemporada(Temporada temporada,MouseListener listener,InterfazUsuario interfaz){
         
         super(listener,interfaz,temporada);
         generarTexto();
     }
     
     public void eliminar(){
-         GestorDatos.eliminarTemporada((Temporada)entidad);
+         GestorBaseDatos.eliminarTemporada((Temporada)entidad);
          interfaz.eliminarPanelTemporada(this);
     }
     
     public void generarLista(){
-        interfaz.annadirEntrenamientos(GestorDatos.getEntrenamientos(((Temporada)entidad).getId()));
+        interfaz.annadirEntrenamientos(GestorBaseDatos.getEntrenamientos(((Temporada)entidad).getId()));
     }
 
     public Temporada getTemporada() {

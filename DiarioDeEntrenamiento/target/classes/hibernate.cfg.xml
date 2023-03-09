@@ -9,7 +9,7 @@
     	<!-- Información básica de la base de datos de conexión de Hibernate-->
     	<property name="connection.username">usuario</property>
     	<property name="connection.driver_class">org.h2.Driver</property>
-    	<property name="connection.url">jdbc:h2:file:C:\Users\victo\OneDrive\Escritorio\DiarioDeEntrenamiento\src\main\java\resources\database</property>
+    	<property name="connection.url">jdbc:h2:file:C:\Users\victo\OneDrive\Escritorio\ProyectoFinalDAM\DiarioDeEntrenamiento\src\main\java\resources\database</property>
 	<property name="dialect">org.hibernate.dialect.H2Dialect</property>
     	<property name="hbm2ddl.auto">update</property>
     	     <!-- Requiere un archivo de mapeo de hibernación asociado .hbm.xml-->

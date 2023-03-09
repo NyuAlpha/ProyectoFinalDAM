@@ -9,19 +9,19 @@ import java.awt.event.MouseListener;
  */
 public class PanelEntrenamiento extends PanelDatos {
     
-    public PanelEntrenamiento(Entrenamiento entrenamiento,MouseListener listener,GUI interfaz){
+    public PanelEntrenamiento(Entrenamiento entrenamiento,MouseListener listener,InterfazUsuario interfaz){
         
         super(listener,interfaz,entrenamiento);    
         generarTexto();
     }
     
     public void eliminar(){
-         GestorDatos.eliminarEntrenamiento((Entrenamiento)entidad);
+         GestorBaseDatos.eliminarEntrenamiento((Entrenamiento)entidad);
          interfaz.eliminarPanelEntrenamiento(this);
     }
     
     public void generarLista(){
-        interfaz.annadirEjercicios(GestorDatos.getEjercicios(((Entrenamiento)entidad).getId()));
+        interfaz.annadirEjercicios(GestorBaseDatos.getEjercicios(((Entrenamiento)entidad).getId()));
     }
 
     public Entrenamiento getEntrenamiento() {

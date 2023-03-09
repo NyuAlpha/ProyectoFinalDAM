@@ -22,13 +22,13 @@ import javax.swing.JPanel;
  */
 public abstract class PanelDatos extends JPanel{
         
-    GUI interfaz;
+    InterfazUsuario interfaz;
     JButton btnEliminar;
     JLabel texto;
     boolean seleccionado;
     protected Object entidad;
     
-    public PanelDatos(MouseListener listener,GUI interfaz,Object entidad){
+    public PanelDatos(MouseListener listener,InterfazUsuario interfaz,Object entidad){
         
         this.interfaz = interfaz;
         this.entidad = entidad;
@@ -75,13 +75,17 @@ public abstract class PanelDatos extends JPanel{
     }
     
     public void seleccionar(){
-        seleccionado = true;
-        this.setBackground(new Color(160,160,170));
-        texto.setForeground(Color.BLUE);
-    }
-    
-    public void setSeleccionado(boolean seleccionado){
-        this.seleccionado = seleccionado;
+        
+        if(!seleccionado){
+            seleccionado = true;
+            this.setBackground(new Color(160,160,170));
+            texto.setForeground(Color.BLUE);
+        }
+        else{
+            seleccionado = false;
+            this.setBackground(new Color(214,214,224));
+            texto.setForeground(Color.BLACK);
+        }
     }
     
     protected void generarTexto(){
@@ -93,4 +97,10 @@ public abstract class PanelDatos extends JPanel{
         }
         texto.setText(txt);
     }
+
+    public boolean isSeleccionado() {
+        return seleccionado;
+    }
+    
+    
 }

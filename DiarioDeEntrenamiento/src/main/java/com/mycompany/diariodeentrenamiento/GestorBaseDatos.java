@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.diariodeentrenamiento;
 
 import POJOs.Ejercicio;
@@ -19,17 +15,15 @@ import org.hibernate.cfg.Configuration;
  *
  * @author victo
  */
-public class GestorDatos {
+public class GestorBaseDatos {
     
-    SessionFactory sf;
-    
-    public GestorDatos(){
+    public GestorBaseDatos(){
         
     }
     
     public static void introPrueba() {
 		
-        Session sesion = GestorDatos.getCurrentSessionFromConfig();
+        Session sesion = GestorBaseDatos.getCurrentSessionFromConfig();
         Transaction tran = sesion.beginTransaction();
         Temporada temporada = new Temporada (new java.sql.Date(2000,2,14),new java.sql.Date(2069,2,14) , "alguien ha envenenido el abrevadero");
         sesion.save(temporada);
@@ -50,52 +44,38 @@ public class GestorDatos {
         return sessionFactory.openSession();
     }
     
-    public static Temporada nuevaTemporada(){
+    public static void nuevaTemporada(Temporada temporada){
         Session session = iniciarSession();
         Transaction tran = session.beginTransaction();
-        Temporada temporada = new Temporada();
         session.save(temporada);
         tran.commit();
         session.close();
-        //sessionFactory.close();
-        return temporada;
     }
     
-    public static Entrenamiento nuevoEntrenamiento(int idTemporada){
+    public static void nuevoEntrenamiento(Entrenamiento entrenamiento){
         Session session = iniciarSession();
         Transaction tran = session.beginTransaction();
-        Entrenamiento entrenamiento = new Entrenamiento();
-        entrenamiento.setIdTemporada(idTemporada);
         session.save(entrenamiento);
         tran.commit();
         session.close();
-        //sessionFactory.close();
-        return entrenamiento;
     }
     
-    public static Ejercicio nuevoEjercicio(int idEntrenamiento){
+    public static void nuevoEjercicio(Ejercicio ejercicio){
         Session session = iniciarSession();
         Transaction tran = session.beginTransaction();
-        Ejercicio ejercicio = new Ejercicio();
-        ejercicio.setIdEntrenamiento(idEntrenamiento);
         session.save(ejercicio);
         tran.commit();
         session.close();
-        //sessionFactory.close();
-        return ejercicio;
     }
         
-    public static Serie nuevaSerie(int idEjercicio,int numSerie){
+    public static void nuevaSerie(Serie serie){
         Session session = iniciarSession();
         Transaction tran = session.beginTransaction();
-        Serie serie = new Serie();
-        serie.setIdEjercicio(idEjercicio);
+        int numSerie = (int)(long)session.createQuery("select count(*) from Serie where idEjercicio = " + serie.getIdEjercicio()).uniqueResult() + 1;
         serie.setNumSerie(numSerie);
         session.save(serie);
         tran.commit();
         session.close();
-        //sessionFactory.close();
-        return serie;
     }
     
         public static void annadirSerie(Serie serie){
@@ -171,7 +151,8 @@ public class GestorDatos {
         //ejemplo: si se elimina la serie 5, la serie 6 pasa a ser la 5, la 7 la 6 ,etc.
         int i = serie.getNumSerie();
         session.delete(serie);
-        session.createQuery("update Serie S set numSerie = S.numSerie - 1  where S.numSerie > " + i).executeUpdate();
+        session.createQuery("update Serie S set numSerie = S.numSerie - 1  where S.numSerie > " + i 
+                + " and S.idEjercicio = " + serie.getIdEjercicio()).executeUpdate();
         tran.commit();
         session.close();
     }
@@ -217,16 +198,6 @@ public class GestorDatos {
         return series;
     }   
     
-    public static int countNumSeries(int idEjercicio){
-        Session session = iniciarSession();
-        Transaction tran = session.beginTransaction();
-        long n = (Long)session.createQuery("select count(*) from Serie where idEjercicio = " + idEjercicio).uniqueResult();
-        tran.commit();
-        session.close();
-    
-        return (int)n;
-    }
-    
     public static ArrayList<String> getListaEjercicios(){
         Session session = iniciarSession();
         Transaction tran = session.beginTransaction();
@@ -237,15 +208,38 @@ public class GestorDatos {
         return listaEjercicios;
     }
     
-    public static  ArrayList<Object> busqueda(String objeto, String ejercicio){
+    public static ArrayList<String> getListaTemporadas(){
         Session session = iniciarSession();
         Transaction tran = session.beginTransaction();
-        ArrayList<Object> lista = null;
-        if(objeto.equals("Ejercicios")){
-            lista= (ArrayList<Object>)session.createQuery(" from Ejercicio where nombre like '" + ejercicio + "'").list();
+        ArrayList<String> listaTemporadas = (ArrayList<String>)session.createQuery("select distinct descripcion from Temporada" ).list();
+        tran.commit();
+        session.close();
+        //sessionFactory.close();
+        return listaTemporadas;
+    }
+    
+    public static  ArrayList<Ejercicio> getEjercicios(String ejercicio){
+        Session session = iniciarSession();
+        Transaction tran = session.beginTransaction();
+        String s = (ejercicio.equals("Todos"))? "":" where nombre like '" + ejercicio + "'";
+        ArrayList<Ejercicio> listaEjercicios = null;
+        listaEjercicios= (ArrayList<Ejercicio>)session.createQuery(" from Ejercicio" + s +" order by idEntrenamiento").list();
+        tran.commit();
+        session.close();
+        return listaEjercicios;
+    }
+    
+    public static ArrayList<Ejercicio> getConsulta(String query ){
+        Session session = iniciarSession();
+        Transaction tran = session.beginTransaction();
+        ArrayList<Ejercicio> ejercicios = null;
+        ejercicios= (ArrayList<Ejercicio>)session.createQuery(query).list();
+        for(Ejercicio e : ejercicios){
+            e.setSeries((ArrayList<Serie>)session.createQuery(" from Serie where idEjercicio = " + e.getId()).list());
         }
         tran.commit();
         session.close();
-        return lista;
-    } 
+        return ejercicios;
+    }
+
 }

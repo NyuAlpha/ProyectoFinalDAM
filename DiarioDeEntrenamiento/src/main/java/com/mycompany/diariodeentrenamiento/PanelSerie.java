@@ -10,7 +10,7 @@ import java.util.ArrayList;
  */
 public class PanelSerie extends PanelDatos{
    
-    public PanelSerie(Serie serie,MouseListener listener,GUI interfaz){
+    public PanelSerie(Serie serie,MouseListener listener,InterfazUsuario interfaz){
         
         super(listener,interfaz,serie);      
         generarTexto();
@@ -18,8 +18,8 @@ public class PanelSerie extends PanelDatos{
     
     public void eliminar(){
 
-        GestorDatos.eliminarSerie((Serie)entidad);
-        interfaz.annadirSeries(GestorDatos.getSeries(((Serie)entidad).getIdEjercicio()));
+        GestorBaseDatos.eliminarSerie((Serie)entidad);
+        interfaz.annadirSeries(GestorBaseDatos.getSeries(((Serie)entidad).getIdEjercicio()));
     }
 
     @Override

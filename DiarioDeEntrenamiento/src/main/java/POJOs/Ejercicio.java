@@ -1,6 +1,7 @@
 package POJOs;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  *
@@ -13,6 +14,7 @@ public class Ejercicio implements Serializable{
     private String variante; 
     private int orden;
     private String descripcion;
+    private ArrayList<Serie> series;
 
     public Ejercicio(int idEntrenamiento, String nombre, String variante, int orden, String descripcion) {
         this.idEntrenamiento = idEntrenamiento;
@@ -49,6 +51,12 @@ public class Ejercicio implements Serializable{
         return descripcion;
     }
 
+    public ArrayList<Serie> getSeries() {
+        return series;
+    }
+    
+    
+
     public void setId(int id) {
         this.id = id;
     }
@@ -72,8 +80,58 @@ public class Ejercicio implements Serializable{
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
+
+    public void setSeries(ArrayList<Serie> series) {
+        this.series = series;
+    }
+    
+    public String resumenSeries(){
+        
+        StringBuilder sb = new StringBuilder("");
+        int peso = -1;
+        int reps = 0;
+        int n = 1;
+        String r = "";
+        for(Serie s : series){
+            //Si es la primera serie
+            if(peso == -1){
+                peso = (int)s.getPeso();
+                reps = s.getRepeticiones();
+                sb.append(" " + peso + "kg(");
+            }
+            //a partir de la segunda serie
+            else{         
+                //Si el peso cambia se escribe la/s serie/s para ese peso
+                if(peso != (int)s.getPeso()){
+                    peso = (int)s.getPeso();
+                    r = (n==1)? "": (n+"x");
+                    sb.append(r + reps + ")," + peso + "kg(");
+                    reps = s.getRepeticiones();
+                    n = 1;
+                }
+                //Si el peso no varia entonces se comprueban las repeticiones
+                else{
+                    //Si las repeticiones han variado se escriben y se resetean
+                    if(reps != s.getRepeticiones()){
+                        r = (n==1)? "": (n+"x");
+                        sb.append(r + reps + ",");
+                        reps = s.getRepeticiones();
+                        n = 1;
+                    }
+                    else{
+                        n++;
+                    }
+                }
+            }
+        }
+        r = (n==1)? "": (n+"x");
+        sb.append(r + reps + ")");
+        return sb.toString();
+    }
     
     public String toString(){
-        return orden +"."+ nombre +" "+ variante + ": " + descripcion;
+        String v = (variante == null)? "":variante;
+        String d = (descripcion == null)? "":descripcion;
+        return nombre +" "+ v+ ": " + d;
     }
 }
