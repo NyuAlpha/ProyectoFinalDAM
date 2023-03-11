@@ -1,6 +1,7 @@
 package com.mycompany.diariodeentrenamiento;
 
 import POJOs.Serie;
+import POJOs.Temporada;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 

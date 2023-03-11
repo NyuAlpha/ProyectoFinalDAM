@@ -130,8 +130,9 @@ public class Ejercicio implements Serializable{
     }
     
     public String toString(){
+        String n = (nombre == null || nombre.isEmpty())? "Sin nombrar ": (nombre + " ");
         String v = (variante == null)? "":variante;
-        String d = (descripcion == null)? "":descripcion;
-        return nombre +" "+ v+ ": " + d;
+        String d = (descripcion == null || descripcion.isEmpty())? "": (": " + descripcion);
+        return n + v + d;
     }
 }

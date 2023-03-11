@@ -33,7 +33,7 @@ public class GestorBaseDatos {
 	}
 	
     public static Session getCurrentSessionFromConfig() {
-        SessionFactory sessionFactory  = new Configuration().configure(new File("C:\\Users\\victo\\OneDrive\\Escritorio\\DiarioDeEntrenamiento\\src\\main\\resources\\hibernate.cfg.xml")).buildSessionFactory();
+        SessionFactory sessionFactory  = new Configuration().configure().buildSessionFactory();
         Session session = sessionFactory.openSession();
         sessionFactory.close();
         return session;
@@ -161,7 +161,7 @@ public class GestorBaseDatos {
         
         Session session = iniciarSession();
         Transaction tran = session.beginTransaction();
-        ArrayList<Temporada> temporadas = (ArrayList<Temporada>)session.createQuery("from Temporada").list();
+        ArrayList<Temporada> temporadas = (ArrayList<Temporada>)session.createQuery("from Temporada order by fechaInicio desc").list();
         tran.commit();
         session.close();
         //sessionFactory.close();
@@ -171,7 +171,8 @@ public class GestorBaseDatos {
     public static ArrayList<Entrenamiento> getEntrenamientos(int idTemporada){
         Session session = iniciarSession();
         Transaction tran = session.beginTransaction();
-        ArrayList<Entrenamiento> entrenamientos = (ArrayList<Entrenamiento>)session.createQuery("from Entrenamiento where idTemporada = " + idTemporada).list();
+        ArrayList<Entrenamiento> entrenamientos = (ArrayList<Entrenamiento>)session.createQuery("from Entrenamiento where idTemporada = " 
+                + idTemporada + "order by fecha desc").list();
         tran.commit();
         session.close();
         //sessionFactory.close();
@@ -181,7 +182,8 @@ public class GestorBaseDatos {
     public static ArrayList<Ejercicio> getEjercicios(int idEntreno){
         Session session = iniciarSession();
         Transaction tran = session.beginTransaction();
-        ArrayList<Ejercicio> ejercicios = (ArrayList<Ejercicio>)session.createQuery("from Ejercicio where idEntrenamiento = " + idEntreno).list();
+        ArrayList<Ejercicio> ejercicios = (ArrayList<Ejercicio>)session.createQuery("from Ejercicio where idEntrenamiento = " 
+                + idEntreno + "order by orden").list();
         tran.commit();
         session.close();
         //sessionFactory.close();
@@ -191,7 +193,8 @@ public class GestorBaseDatos {
     public static ArrayList<Serie> getSeries(int idEjercicio){
         Session session = iniciarSession();
         Transaction tran = session.beginTransaction();
-        ArrayList<Serie> series = (ArrayList<Serie>)session.createQuery("from Serie where idEjercicio = " + idEjercicio).list();
+        ArrayList<Serie> series = (ArrayList<Serie>)session.createQuery("from Serie where idEjercicio = " 
+                + idEjercicio + "order by numSerie").list();
         tran.commit();
         session.close();
         //sessionFactory.close();
@@ -240,6 +243,24 @@ public class GestorBaseDatos {
         tran.commit();
         session.close();
         return ejercicios;
+    }
+    
+    public static Temporada getTemporada(int idTemporada){
+        Session session = iniciarSession();
+        Transaction tran = session.beginTransaction();
+        Temporada temporada = (Temporada)session.createQuery("from Temporada where id = " + idTemporada).list().get(0);
+        tran.commit();
+        session.close();
+        return temporada;
+    }
+    
+    public static Entrenamiento getEntrenamiento(int idEntrenamiento){
+        Session session = iniciarSession();
+        Transaction tran = session.beginTransaction();
+        Entrenamiento entrenamiento = (Entrenamiento)session.createQuery("from Entrenamiento where id = " + idEntrenamiento).list().get(0);
+        tran.commit();
+        session.close();
+        return entrenamiento;
     }
 
 }

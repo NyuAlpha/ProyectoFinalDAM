@@ -65,6 +65,9 @@ public class Serie implements Serializable{
     }
     
     public String toString(){
-        return numSerie + ") " + (int)peso + "kg x " + repeticiones + " : " + extra;
+        String p = (peso == 0)? "Sin peso ": (peso +"kg x ");
+        String r = (repeticiones == 0)? "? reps": Integer.toString(repeticiones);
+        String e = (extra == null || extra.isEmpty())? " ": (": " + extra);
+        return numSerie + ": " + p + r + e;
     }
 }

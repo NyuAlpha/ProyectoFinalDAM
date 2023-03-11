@@ -7,6 +7,7 @@ package com.mycompany.diariodeentrenamiento;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
@@ -14,6 +15,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -36,16 +38,23 @@ public abstract class PanelDatos extends JPanel{
         
         this.setBackground(new Color(214,214,224));
         this.setMaximumSize(new Dimension (1000,25));
+        setBorder(BorderFactory.createEtchedBorder());
         
         this.addMouseListener(listener);
         btnEliminar = new JButton(new ImageIcon(".\\src\\main\\java\\iconos\\delete.png"));
-        btnEliminar.setBorder(BorderFactory.createEmptyBorder(3,3,3,3));
+        //Image im = ((ImageIcon)btnEliminar.getIcon()).getImage();
+        //((ImageIcon)btnEliminar.getIcon()).setImage(im.getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+        btnEliminar.setBorder(BorderFactory.createEtchedBorder());
+        btnEliminar.setToolTipText("Eliminar");
         
         texto = new JLabel();
         
         btnEliminar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-               eliminar();
+                if(JOptionPane.showConfirmDialog(null, "¿Está segur@ de que desea eliminar este elemento para siempre?", "", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION ){
+                    eliminar();
+                    JOptionPane.showMessageDialog(null,"¡Eliminado con exito!");
+                }
             }
         });
         
@@ -63,7 +72,8 @@ public abstract class PanelDatos extends JPanel{
     public void activar(){
         if(!seleccionado){
             this.setBackground(Color.LIGHT_GRAY);
-            texto.setForeground(Color.BLUE);           
+            texto.setForeground(Color.BLUE);
+            setBorder(BorderFactory.createEtchedBorder(Color.DARK_GRAY,Color.GRAY));
         }
     }
     
@@ -71,6 +81,7 @@ public abstract class PanelDatos extends JPanel{
         if(!seleccionado){
             this.setBackground(new Color(214,214,224));
             texto.setForeground(Color.BLACK);
+            setBorder(BorderFactory.createEtchedBorder());
         }
     }
     
@@ -85,6 +96,7 @@ public abstract class PanelDatos extends JPanel{
             seleccionado = false;
             this.setBackground(new Color(214,214,224));
             texto.setForeground(Color.BLACK);
+            setBorder(BorderFactory.createEtchedBorder());
         }
     }
     

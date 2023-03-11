@@ -66,8 +66,9 @@ public class Entrenamiento implements Serializable {
     
     public String toString(){
         String f = (fecha == null)? "Fecha desconocida":fecha.toString();
-        String d = (descripcion == null)? "":descripcion;
-        return f + " ->  Peso corporal " +  (int)pesoCorporal + " kg    " + descripcion;
+        String p = (pesoCorporal == 0)? "  (?kg)": ( "  (" + pesoCorporal + "kg) ");
+        String d = (descripcion == null || descripcion.isEmpty())? "": ( ": " + descripcion);
+        return f + p + d;
     }
     
 }

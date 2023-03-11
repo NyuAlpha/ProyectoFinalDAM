@@ -58,7 +58,8 @@ public class Temporada implements Serializable{
     
     public String toString(){
         String fInicio = (fechaInicio == null)? "fecha desconocida":fechaInicio.toString();
-        String fFin = (fechaFin == null)? "fecha desconocida":fechaFin.toString();
-        return fInicio +"  ->  "+ fFin +":  "+ descripcion;
+        String fFin = (fechaFin == null)? "Sin fecha final":fechaFin.toString();
+        String d = (descripcion.isEmpty())? " ": ( ": " + descripcion.toString());
+        return fInicio +"  ->  "+ fFin + d;
     }
 }

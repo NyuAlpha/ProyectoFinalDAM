@@ -5,6 +5,8 @@ import POJOs.Entrenamiento;
 import POJOs.Serie;
 import POJOs.Temporada;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -28,6 +30,9 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  *
@@ -44,16 +49,8 @@ public class InterfazUsuario extends JFrame implements MouseListener{
     private JSplitPane panelEdicion;
     private JSplitPane panelTemporadaEntrenamiento;
     private JSplitPane panelEjercicioSerie;
-    private JPanel panelTemporada;
-    private JPanel panelEntrenamiento;
-    private JPanel panelEjercicio;
-    private JPanel panelSerie;
     
-
-    private JPanel panelListaTemporadas;
-    private JPanel panelListaEntrenamientos;
-    private JPanel panelListaEjercicios;
-    private JPanel panelListaSeries;
+    
     private JScrollPane scrollTemporadas;
     private JScrollPane scrollEntrenamientos;
     private JScrollPane scrollEjercicios;
@@ -65,7 +62,69 @@ public class InterfazUsuario extends JFrame implements MouseListener{
     private PanelEjercicio ejercicioSeleccionado;
     private PanelSerie serieSeleccionada;
     
-
+/*=======================================================================
+    Paneles
+=========================================================================*/
+    private JPanel panelTemporada;
+    private JPanel panelEntrenamiento;
+    private JPanel panelEjercicio;
+    private JPanel panelSerie;
+    private JPanel panelListaTemporadas;
+    private JPanel panelListaEntrenamientos;
+    private JPanel panelListaEjercicios;
+    private JPanel panelListaSeries;
+  
+/*=======================================================================
+    Campos de texto
+=========================================================================*/
+    private JTextField txtFechaInicio;
+    private JTextField txtDescripcionTemporada;
+    private JTextField txtFecha;
+    private JTextField txtPesoCorporal;
+    private JTextField txtDescripcionEntrenamiento;
+    private JTextField txtNombre;
+    private JTextField txtVariante;
+    private JTextField txtDescripcionEjercicio;
+    private JTextField txtPeso;
+    private JTextField txtRepeticiones;
+    private JTextField txtExtra;
+/*=======================================================================
+    Etiquetas
+=========================================================================*/    
+    private JLabel lblTemporadas;
+    private JLabel lblFechaInicio;
+    private JLabel lblDescripcionTemporada;
+    private JLabel lblEntrenamientos;
+    private JLabel lblFecha;
+    private JLabel lblPesoCorporal;
+    private JLabel lblDescripcionEntrenamiento;
+    private JLabel lblEjercicios;
+    private JLabel lblNombre;
+    private JLabel lblVariante;
+    private JLabel lblDescripcionEjercicio;
+    private JLabel lblSeries;
+    private JLabel lblPeso;
+    private JLabel lblRepeticiones;
+    private JLabel lblExtra;
+    private JLabel lblTemporadaInfo;
+    private JLabel lblEntrenamientoInfo;
+    private JLabel lblEjercicioInfo;
+    private JLabel lblSerieInfo;
+/*=======================================================================
+    Botones
+=========================================================================*/    
+    private JButton btnGuardarTemporada;
+    private JButton btnAnnadirTemporada;
+    private JButton btnGuardarEntrenamiento;
+    private JButton btnAnnadirEntrenamiento;
+    private JButton btnGuardarEjercicio;
+    private JButton btnAnnadirEjercicio;
+    private JButton btnGuardarSerie;
+    private JButton btnAnnadirSerie;
+    private JButton btnclonarSerie;
+    
+    
+    
 /*=======================================================================
     Variables del panel de búsqueda
 =========================================================================*/
@@ -90,62 +149,11 @@ public class InterfazUsuario extends JFrame implements MouseListener{
     private JTextField txtPesoMinimo;
     private JTextField txtPesoMaximo;
     private JButton btnFiltrar;
+    private JButton btnTransferir;
+    
+    private JScrollPane scrollPaneA;
+    private JScrollPane scrollPaneB;
 
-    
-/*=======================================================================
-    Variables del panel del formulario Temporada
-=========================================================================*/
-
-    private JPanel panelFormularioTemporada;
-    private JLabel lblTemporadas;
-    private JLabel lblFechaInicio;
-    private JLabel lblFechaFin;
-    private JLabel lblDescripcionTemporada;
-    private JTextField txtFechaInicio;
-    private JTextField txtFechaFin;
-    private JTextField txtDescripcionTemporada;
-    private JButton btnGuardarTemporada;
-    private JButton btnAnnadirTemporada;
-    
-/*=======================================================================
-    Variables del panel del formulario Entrenamiento
-=========================================================================*/
-    private JPanel panelFormularioEntrenamiento;
-    private JLabel lblFecha;
-    private JLabel lblPesoCorporal;
-    private JLabel lblDescripcionEntrenamiento;
-    private JTextField txtFecha;
-    private JTextField txtPesoCorporal;
-    private JTextField txtDescripcionEntrenamiento;
-    private JButton btnGuardarEntrenamiento;
-    private JButton btnAnnadirEntrenamiento;
-    
-/*=======================================================================
-    Variables del panel del formulario Ejercicio
-=========================================================================*/
-    private JPanel panelFormularioEjercicio;
-    private JLabel lblNombre;
-    private JLabel lblVariante;
-    private JLabel lblDescripcionEjercicio;
-    private JTextField txtNombre;
-    private JTextField txtVariante;
-    private JTextField txtDescripcionEjercicio;
-    private JButton btnGuardarEjercicio;
-    private JButton btnAnnadirEjercicio;
-    
-/*=======================================================================
-    Variables del panel del formulario Serie
-=========================================================================*/
-    private JPanel panelFormularioSerie;
-    private JLabel lblPeso;
-    private JLabel lblRepeticiones;
-    private JLabel lblExtra;
-    private JTextField txtPeso;
-    private JTextField txtRepeticiones;
-    private JTextField txtExtra;
-    private JButton btnGuardarSerie;
-    private JButton btnAnnadirSerie;
-    
     
     public static void main(String[] args){
         new InterfazUsuario();
@@ -157,21 +165,28 @@ public class InterfazUsuario extends JFrame implements MouseListener{
     
     public InterfazUsuario(){
         
-        crearFormularioTemporada();
-        crearFormularioEntrenamiento();
-        crearFormularioEjercicio();
-        crearFormularioSerie();
         crearPanelEdicion();
         crearPanelBusqueda();
         
         annadirTemporadas(GestorBaseDatos.getTemporadas());
         
         tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-        tabbedPane.addTab("Editor", panelEdicion);
-        tabbedPane.addTab("Buscador", panelBusqueda);
+        tabbedPane.addTab("Editor ",new ImageIcon(".\\src\\main\\java\\iconos\\edit.png"), panelEdicion);
+        tabbedPane.addTab("Buscador ",new ImageIcon(".\\src\\main\\java\\iconos\\search.png"), panelBusqueda);
         add(tabbedPane);
         
-        setBounds(100,100, 1200, 700);
+        tabbedPane.addChangeListener(new ChangeListener(){
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                JTabbedPane tp = (JTabbedPane)e.getSource();
+                if(tp.getSelectedComponent() == panelBusqueda)
+                    actualizarComboBoxEjercicio();
+                    actualizarComboBoxTemporada();
+            }
+        });
+        
+        setSize(1230,800);
+        setResizable(false);
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
     }
@@ -179,6 +194,7 @@ public class InterfazUsuario extends JFrame implements MouseListener{
     private void crearPanelBusqueda(){
         
         panelBusqueda = new JPanel();
+        panelBusqueda.setBackground(new Color(250, 253, 138));
         textA = new JTextArea();
         textB = new JTextArea();
         lblFechaMinima = new JLabel("Después de  ");
@@ -199,14 +215,40 @@ public class InterfazUsuario extends JFrame implements MouseListener{
         txtPesoMinimo = new JTextField();
         txtPesoMaximo = new JTextField();
         btnFiltrar = new JButton("Filtrar");
+        btnTransferir = new JButton("-----Transferir---->");
         
+        scrollPaneA = new JScrollPane();
+        scrollPaneB = new JScrollPane();
+        
+        scrollPaneA.setViewportView(textA);
+        scrollPaneB.setViewportView(textB);
+        scrollPaneA.getVerticalScrollBar().setUnitIncrement(10);
+        scrollPaneB.getVerticalScrollBar().setUnitIncrement(10);
+        scrollPaneA.setBackground(new Color(250, 162, 57));
+        scrollPaneB.setBackground(new Color(250, 162, 57));
+        scrollPaneA.setBorder(new EmptyBorder(5,5,5,5));
+        scrollPaneB.setBorder(new EmptyBorder(5,5,5,5));
+        
+        textA.setFont(new Font(Font.DIALOG,Font.BOLD,12));
+        textB.setFont(new Font(Font.DIALOG,Font.BOLD,12));
+                
         actualizarComboBoxEjercicio();
         actualizarComboBoxEjercicio();
+        
+
 
         btnFiltrar.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
                 filtrar();
+            }
+        });
+        
+        btnTransferir.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                textB.setText(textA.getText());
+                textA.setText("");
             }
         });
         
@@ -242,8 +284,13 @@ public class InterfazUsuario extends JFrame implements MouseListener{
                     .addComponent(btnFiltrar)
                 )
             )
-            .addComponent(textA)
-            .addComponent(textB)
+            .addGroup(layoutBusqueda.createParallelGroup(GroupLayout.Alignment.CENTER)
+                .addGroup(layoutBusqueda.createSequentialGroup()
+                    .addComponent(scrollPaneA,GroupLayout.PREFERRED_SIZE,430,GroupLayout.PREFERRED_SIZE)
+                    .addComponent(scrollPaneB,GroupLayout.PREFERRED_SIZE,430,GroupLayout.PREFERRED_SIZE)
+                )
+                .addComponent(btnTransferir)
+            )
         );
         layoutBusqueda.setVerticalGroup(layoutBusqueda.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layoutBusqueda.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -269,8 +316,13 @@ public class InterfazUsuario extends JFrame implements MouseListener{
                     .addComponent(btnFiltrar)
                 )
             )
-            .addComponent(textA)
-            .addComponent(textB)
+            .addGroup(layoutBusqueda.createSequentialGroup()
+                .addGroup(layoutBusqueda.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(scrollPaneA)
+                    .addComponent(scrollPaneB)
+                )
+                .addComponent(btnTransferir)
+            )
         );
     }
     
@@ -295,14 +347,40 @@ public class InterfazUsuario extends JFrame implements MouseListener{
         filtro.setFechaMinima(txtFechaMinima.getText());
         filtro.setFechaMaxima(txtFechaMaxima.getText());
         filtro.setEjercicio(cbEjercicio.getSelectedItem().toString());
+        filtro.setTemporada(cbTemporada.getSelectedItem().toString());
         filtro.setPesoCorporalMinimo(txtPesoCorporalMinimo.getText());
         filtro.setPesoCorporalMaximo(txtPesoCorporalMaximo.getText());
         filtro.setPesoMinimo(txtPesoMinimo.getText());
         filtro.setPesoMaximo(txtPesoMaximo.getText());
         ArrayList<Ejercicio> ejercicios = GestorBaseDatos.getConsulta(filtro.crearQuery());
-            textA.setText("");
+        textA.setText("");
+        //Entrenamiento entrenamientoPrevio = null;
+        Entrenamiento entrenamientoImprimir = null;
+        //Temporada temporadaPrevia = null;
+        Temporada temporadaImprimir = null;
+        boolean primerVez = true;
+
         for(Ejercicio e : ejercicios){
-            textA.append(e.toString() + e.resumenSeries() +"\n");
+            if(primerVez){
+                entrenamientoImprimir = GestorBaseDatos.getEntrenamiento(e.getIdEntrenamiento());
+                temporadaImprimir = GestorBaseDatos.getTemporada(entrenamientoImprimir.getIdTemporada());
+                textA.append( "  " + temporadaImprimir + "\n");
+                textA.append("\n    " + entrenamientoImprimir + "\n");
+                primerVez = false;
+            }
+            else{
+
+                if(entrenamientoImprimir.getId() != e.getIdEntrenamiento()){
+                    entrenamientoImprimir = GestorBaseDatos.getEntrenamiento(e.getIdEntrenamiento());
+                    if(temporadaImprimir.getId() != entrenamientoImprimir.getIdTemporada()){
+                        temporadaImprimir = GestorBaseDatos.getTemporada(entrenamientoImprimir.getIdTemporada());
+                        textA.append( "\n  " + temporadaImprimir + "\n");   
+                    }
+                    textA.append("\n    " + entrenamientoImprimir + "\n");
+                }
+            }
+
+            textA.append("      " + e.toString() + e.resumenSeries() +"\n");
         }
     }       
     
@@ -311,103 +389,128 @@ public class InterfazUsuario extends JFrame implements MouseListener{
         panelEdicion = new JSplitPane();
         panelTemporadaEntrenamiento = new JSplitPane();
         panelEjercicioSerie = new JSplitPane();
-        
+                
         panelTemporada = new JPanel();
         panelEntrenamiento = new JPanel();
-        panelEjercicio = new JPanel();
+        panelEjercicio = new JPanel();       
         panelSerie = new JPanel();
         
+        scrollTemporadas = new JScrollPane();
+        scrollEntrenamientos = new JScrollPane();
+        scrollEjercicios = new JScrollPane();   
+        scrollSeries = new JScrollPane();  
         
-
+        panelListaTemporadas = new JPanel();
         panelListaEntrenamientos = new JPanel();
         panelListaEjercicios = new JPanel();
         panelListaSeries = new JPanel();
         
-        scrollEntrenamientos = new JScrollPane();
-        scrollEjercicios = new JScrollPane();
-        scrollSeries = new JScrollPane();
+        lblTemporadaInfo = new JLabel("Temporada seleccionada");
+        lblTemporadaInfo.setFont(new Font(Font.DIALOG,Font.BOLD,15));
+        lblEntrenamientoInfo = new JLabel("Entrenamiento seleccionado");
+        lblEntrenamientoInfo.setFont(new Font(Font.DIALOG,Font.BOLD,15));
+        lblEjercicioInfo = new JLabel("Ejercicio seleccionado");
+        lblEjercicioInfo.setFont(new Font(Font.DIALOG,Font.BOLD,15));
+        lblSerieInfo = new JLabel("Serie seleccionada");
+        lblSerieInfo.setFont(new Font(Font.DIALOG,Font.BOLD,15));
         
-        btnAnnadirEjercicio = new JButton(new ImageIcon(".\\src\\main\\java\\iconos\\add.png"));
-        btnAnnadirSerie = new JButton(new ImageIcon(".\\src\\main\\java\\iconos\\add.png"));  
+        lblTemporadas = new JLabel("Lista de temporadas");
+        lblFechaInicio = new JLabel ("Inicio de temporada");
+        lblDescripcionTemporada = new JLabel ("Descripcion");
         
-        //==================================================================================================
+        lblEntrenamientos = new JLabel("Lista de entrenamientos de la temporada");
+        lblFecha = new JLabel ("Día (fecha)");
+        lblPesoCorporal = new JLabel ("Peso corporal(kg)");
+        lblDescripcionEntrenamiento = new JLabel ("Descripcion");
         
-        //Estableciendo todos los SplitPane de la pantalla
-        panelEdicion.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
-        panelEdicion.setRightComponent(panelEjercicioSerie);
-        panelEdicion.setLeftComponent(panelTemporadaEntrenamiento);
-        panelEdicion.setDividerLocation(400);
+        lblEjercicios = new JLabel("Lista de ejercicios del entrenamiento");
+        lblNombre = new JLabel ("Nombre");
+        lblVariante = new JLabel ("Variante");
+        lblDescripcionEjercicio = new JLabel ("Descripcion");
         
-        panelTemporadaEntrenamiento.setOrientation(JSplitPane.VERTICAL_SPLIT);
-        panelTemporadaEntrenamiento.setTopComponent(panelFormularioTemporada);
-        panelTemporadaEntrenamiento.setBottomComponent(panelEntrenamiento);
-        panelTemporadaEntrenamiento.setDividerLocation(300);
+        lblSeries = new JLabel("Lista de series del ejercicio");
+        lblPeso = new JLabel ("Peso(kg)");
+        lblRepeticiones = new JLabel ("Repeticiones");
+        lblExtra = new JLabel ("Extra");
         
-        panelEjercicioSerie.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
-        panelEjercicioSerie.setRightComponent(panelSerie);
-        panelEjercicioSerie.setLeftComponent(panelEjercicio);
-        panelEjercicioSerie.setDividerLocation(450);
         
-        //Anidando componentes
-
-        panelEntrenamiento.setLayout(new BoxLayout(panelEntrenamiento,BoxLayout.Y_AXIS));
-        panelEjercicio.setLayout(new BoxLayout(panelEjercicio,BoxLayout.Y_AXIS));
-        panelSerie.setLayout(new BoxLayout(panelSerie,BoxLayout.Y_AXIS));
-        
-        //Colocando formularios en sus paneles
-
-        panelEntrenamiento.add(panelFormularioEntrenamiento);
-        panelEjercicio.add(panelFormularioEjercicio);
-        panelSerie.add(panelFormularioSerie);
-        
-        //Colocando etiquetas informativas 
-
-
-        panelEntrenamiento.add(new JLabel("Entrenamientos"));
-        panelEjercicio.add(new JLabel("Ejercicios"));
-        panelSerie.add(new JLabel("Series"));
-        
-        //Anidando el scrollPane a sus paneles correspondientes
-
-        panelEntrenamiento.add(scrollEntrenamientos);
-        panelEjercicio.add(scrollEjercicios);
-        panelSerie.add(scrollSeries);
-        
-        //Anidando los paneles de listas a los scrollPane
-
-        scrollEntrenamientos.setViewportView(panelListaEntrenamientos);
-        scrollEjercicios.setViewportView(panelListaEjercicios);
-        scrollSeries.setViewportView(panelListaSeries);
-        
-        //Estableciendo un boxlayout vertical como layout de los paneles de listas
-        panelListaTemporadas.setLayout(new BoxLayout(panelListaTemporadas,BoxLayout.Y_AXIS));
-        panelListaEntrenamientos.setLayout(new BoxLayout(panelListaEntrenamientos,BoxLayout.Y_AXIS));
-        panelListaEjercicios.setLayout(new BoxLayout(panelListaEjercicios,BoxLayout.Y_AXIS));
-        panelListaSeries.setLayout(new BoxLayout(panelListaSeries,BoxLayout.Y_AXIS));
-    }
-    
-    //Métodos de creación de paneles de formulario
-    
-    private void crearFormularioTemporada(){
-        panelFormularioTemporada = new JPanel();
-        lblTemporadas = new JLabel("Temporadas");
-        lblFechaInicio = new JLabel ("Fecha de inicio   ");
-        lblFechaFin = new JLabel ("Fecha de finalización   ");
-        lblDescripcionTemporada = new JLabel ("Descripcion   ");
         txtFechaInicio = new JTextField();
-        txtFechaFin = new JTextField();
         txtDescripcionTemporada = new JTextField();
+        txtFecha = new JTextField();
+        txtPesoCorporal = new JTextField();
+        txtDescripcionEntrenamiento = new JTextField();
+        txtNombre = new JTextField();
+        txtVariante = new JTextField();
+        txtDescripcionEjercicio = new JTextField();
+        txtPeso = new JTextField();
+        txtRepeticiones = new JTextField();
+        txtExtra = new JTextField();
+        
+        //Botones
         btnGuardarTemporada = new JButton(new ImageIcon(".\\src\\main\\java\\iconos\\save.png"));
+        btnGuardarTemporada.setToolTipText("Guardar cambios de temporada");
         btnAnnadirTemporada = new JButton(new ImageIcon(".\\src\\main\\java\\iconos\\add.png"));
-        panelListaTemporadas = new JPanel();
-        scrollTemporadas = new JScrollPane();
-        
-        
-        panelFormularioTemporada.setBackground(new Color(180, 160, 255));
+        btnAnnadirTemporada.setToolTipText("Nueva temporada");
+        btnGuardarEntrenamiento = new JButton(new ImageIcon(".\\src\\main\\java\\iconos\\save.png"));
+        btnGuardarEntrenamiento.setToolTipText("Guardar cambios de entrenamiento");
+        btnAnnadirEntrenamiento = new JButton(new ImageIcon(".\\src\\main\\java\\iconos\\add.png"));
+        btnAnnadirEntrenamiento.setToolTipText("Nuevo entrenamiento");
+        btnGuardarEjercicio = new JButton(new ImageIcon(".\\src\\main\\java\\iconos\\save.png"));
+        btnGuardarEjercicio.setToolTipText("Guardar cambios del ejercicio");
+        btnAnnadirEjercicio = new JButton(new ImageIcon(".\\src\\main\\java\\iconos\\add.png"));
+        btnAnnadirEjercicio.setToolTipText("Nuevo ejercicio");
+        btnGuardarSerie = new JButton(new ImageIcon(".\\src\\main\\java\\iconos\\save.png"));
+        btnGuardarSerie.setToolTipText("Guardar cambios de la serie");
+        btnAnnadirSerie = new JButton(new ImageIcon(".\\src\\main\\java\\iconos\\add.png"));
+        btnAnnadirSerie.setToolTipText("Nueva serie");
+        btnclonarSerie = new JButton(new ImageIcon(".\\src\\main\\java\\iconos\\clone.png"));
+        btnclonarSerie.setToolTipText("Clonar serie");
+
+        panelTemporada.setBackground(new Color(180, 160, 255));
+        lblTemporadas.setFont(new Font(Font.DIALOG,Font.BOLD,15));
+        panelListaTemporadas.setLayout(new BoxLayout(panelListaTemporadas,BoxLayout.Y_AXIS));
+        panelListaTemporadas.setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
         scrollTemporadas.setViewportView(panelListaTemporadas);
+        scrollTemporadas.setBackground(new Color(100, 80, 180));
+        scrollTemporadas.setBorder(new EmptyBorder(5,5,5,5));
+        scrollTemporadas.getVerticalScrollBar().setUnitIncrement(10);
+
+        panelEntrenamiento.setBackground(new Color(180, 160, 255));
+        lblEntrenamientos.setFont(new Font(Font.DIALOG,Font.BOLD,15));
+        panelListaEntrenamientos.setLayout(new BoxLayout(panelListaEntrenamientos,BoxLayout.Y_AXIS));
+        panelListaEntrenamientos.setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
+        scrollEntrenamientos.setViewportView(panelListaEntrenamientos);
+        scrollEntrenamientos.setBackground(new Color(100, 80, 180));
+        scrollEntrenamientos.setBorder(new EmptyBorder(5,5,5,5));        
+        scrollEntrenamientos.getVerticalScrollBar().setUnitIncrement(10);
+    
+        panelEjercicio.setBackground(new Color(180, 160, 255));
+        lblEjercicios.setFont(new Font(Font.DIALOG,Font.BOLD,15));
+        panelListaEjercicios.setLayout(new BoxLayout(panelListaEjercicios,BoxLayout.Y_AXIS));
+        panelListaEjercicios.setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
+        scrollEjercicios.setViewportView(panelListaEjercicios);
+        scrollEjercicios.setBackground(new Color(100, 80, 180));
+        scrollEjercicios.setBorder(new EmptyBorder(5,5,5,5));
+        scrollEjercicios.getVerticalScrollBar().setUnitIncrement(10);
+        
+        panelSerie.setBackground(new Color(180, 160, 255));
+        lblSeries.setFont(new Font(Font.DIALOG,Font.BOLD,15));
+        panelListaSeries.setLayout(new BoxLayout(panelListaSeries,BoxLayout.Y_AXIS));
+        panelListaSeries.setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
+        scrollSeries.setViewportView(panelListaSeries);
+        scrollSeries.setBackground(new Color(100, 80, 180));
+        scrollSeries.setBorder(new EmptyBorder(5,5,5,5));
+        scrollSeries.getVerticalScrollBar().setUnitIncrement(10);
         
         btnGuardarTemporada.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         btnAnnadirTemporada.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        btnGuardarEntrenamiento.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        btnAnnadirEntrenamiento.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        btnGuardarEjercicio.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        btnAnnadirEjercicio.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        btnGuardarSerie.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        btnAnnadirSerie.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        btnclonarSerie.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         
         btnGuardarTemporada.addActionListener(new ActionListener(){
             @Override
@@ -421,75 +524,6 @@ public class InterfazUsuario extends JFrame implements MouseListener{
                 nuevaTemporada();
             }
         });
-        
-        GroupLayout layout = new GroupLayout(panelFormularioTemporada);
-        panelFormularioTemporada.setLayout(layout);
-        layout.setAutoCreateGaps(true);
-        layout.setAutoCreateContainerGaps(true);
-        
-        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(lblFechaInicio)
-                    .addComponent(lblFechaFin)
-                    .addComponent(lblDescripcionTemporada)  
-                )
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(txtFechaInicio,GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtFechaFin,GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtDescripcionTemporada,GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)
-                )
-                .addGap(20)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(btnGuardarTemporada)
-                    .addComponent(btnAnnadirTemporada)
-                )
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
-            )
-            .addComponent(lblTemporadas)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(scrollTemporadas)
-                .addContainerGap()
-            )
-        );
-        layout.setVerticalGroup(layout.createSequentialGroup()
-            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addComponent(lblFechaInicio,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblFechaFin,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblDescripcionTemporada,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                )
-                .addGroup(layout.createSequentialGroup()
-                    .addComponent(txtDescripcionTemporada,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtFechaFin,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)               
-                    .addComponent(txtFechaInicio,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                )
-                .addGroup(layout.createSequentialGroup()
-                    .addComponent(btnGuardarTemporada)
-                    .addComponent(btnAnnadirTemporada)
-                )
-            )
-            .addGap(20)
-            .addComponent(lblTemporadas)
-            .addComponent(scrollTemporadas)
-        );
-    }
-    
-    private void crearFormularioEntrenamiento(){
-        
-        panelFormularioEntrenamiento = new JPanel();
-        lblFecha = new JLabel ("Fecha   ");
-        lblPesoCorporal = new JLabel ("Peso corporal(kg)   ");
-        lblDescripcionEntrenamiento = new JLabel ("Descripcion   ");
-        txtFecha = new JTextField();
-        txtPesoCorporal = new JTextField();
-        txtDescripcionEntrenamiento = new JTextField();
-        btnGuardarEntrenamiento = new JButton(new ImageIcon(".\\src\\main\\java\\iconos\\save.png"));
-        btnAnnadirEntrenamiento = new JButton(new ImageIcon(".\\src\\main\\java\\iconos\\add.png"));
-        
-        btnGuardarEntrenamiento.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        btnAnnadirEntrenamiento.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        
         btnGuardarEntrenamiento.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -502,66 +536,10 @@ public class InterfazUsuario extends JFrame implements MouseListener{
                 nuevoEntrenamiento();
             }
         });
-        
-        GroupLayout layout = new GroupLayout(panelFormularioEntrenamiento);
-        panelFormularioEntrenamiento.setLayout(layout);
-        layout.setAutoCreateGaps(true);
-        layout.setAutoCreateContainerGaps(true);
-        
-        layout.setHorizontalGroup(layout.createSequentialGroup()
-            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addComponent(lblFecha)
-                    .addComponent(txtFecha,GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE))
-                .addGroup(layout.createSequentialGroup()
-                    .addComponent(lblPesoCorporal)
-                    .addComponent(txtPesoCorporal,GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE))
-                .addGroup(layout.createSequentialGroup()
-                    .addComponent(lblDescripcionEntrenamiento)
-                    .addComponent(txtDescripcionEntrenamiento,GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)))
-            .addGap(20)
-            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addComponent(btnGuardarEntrenamiento)
-                .addComponent(btnAnnadirEntrenamiento)
-            )
-        );
-        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(lblFecha,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtFecha,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(lblPesoCorporal,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtPesoCorporal,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(lblDescripcionEntrenamiento,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtDescripcionEntrenamiento,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(btnGuardarEntrenamiento)
-                .addComponent(btnAnnadirEntrenamiento)
-            )
-        );
-    }
-    
-    private void crearFormularioEjercicio(){
-        
-        panelFormularioEjercicio = new JPanel();
-        lblNombre = new JLabel ("Nombre   ");
-        lblVariante = new JLabel ("Variante   ");
-        lblDescripcionEjercicio = new JLabel ("Descripcion   ");
-        txtNombre = new JTextField();
-        txtVariante = new JTextField();
-        txtDescripcionEjercicio = new JTextField();
-        btnGuardarEjercicio = new JButton(new ImageIcon(".\\src\\main\\java\\iconos\\save.png"));
-        btnAnnadirEjercicio = new JButton(new ImageIcon(".\\src\\main\\java\\iconos\\add.png"));
-        
-        btnGuardarEjercicio.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        btnAnnadirEjercicio.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        
         btnGuardarEjercicio.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                actualizarEntrenamiento();
+                actualizarEjercicio();
             }
         });
         btnAnnadirEjercicio.addActionListener(new ActionListener(){
@@ -570,65 +548,10 @@ public class InterfazUsuario extends JFrame implements MouseListener{
                 nuevoEjercicio();
             }
         });
-        
-        GroupLayout layout = new GroupLayout(panelFormularioEjercicio);
-        panelFormularioEjercicio.setLayout(layout);
-        layout.setAutoCreateGaps(true);
-        layout.setAutoCreateContainerGaps(true);
-        
-        layout.setHorizontalGroup(layout.createSequentialGroup()
-            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addComponent(lblNombre)
-                    .addComponent(txtNombre,GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE))
-                .addGroup(layout.createSequentialGroup()
-                    .addComponent(lblVariante)
-                    .addComponent(txtVariante,GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE))
-                .addGroup(layout.createSequentialGroup()
-                    .addComponent(lblDescripcionEjercicio)
-                    .addComponent(txtDescripcionEjercicio,GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)))
-            .addGap(20)
-            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addComponent(btnGuardarEjercicio)
-                .addComponent(btnAnnadirEjercicio)
-            )
-        );
-        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(lblNombre,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtNombre,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(lblVariante,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtVariante,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))              
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(lblDescripcionEjercicio,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtDescripcionEjercicio,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(btnGuardarEjercicio)
-                .addComponent(btnAnnadirEjercicio)
-            )
-        );           
-    }
-    
-    private void crearFormularioSerie(){
-        panelFormularioSerie = new JPanel();
-        lblPeso = new JLabel ("Peso(kg)   ");
-        lblRepeticiones = new JLabel ("Repeticiones   ");
-        lblExtra = new JLabel ("Extra   ");
-        txtPeso = new JTextField();
-        txtRepeticiones = new JTextField();
-        txtExtra = new JTextField();
-        btnGuardarSerie = new JButton(new ImageIcon(".\\src\\main\\java\\iconos\\save.png"));
-        btnAnnadirSerie = new JButton(new ImageIcon(".\\src\\main\\java\\iconos\\add.png"));
-        
-        btnGuardarSerie.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        btnAnnadirSerie.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        
         btnGuardarSerie.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                actualizarEntrenamiento();
+                actualizarSerie();
             }
         });
         btnAnnadirSerie.addActionListener(new ActionListener(){
@@ -636,174 +559,266 @@ public class InterfazUsuario extends JFrame implements MouseListener{
             public void actionPerformed(ActionEvent e) {
                 nuevaSerie();
             }
-        });        
-        
-        GroupLayout layout = new GroupLayout(panelFormularioSerie);
-        panelFormularioSerie.setLayout(layout);
+        });
+        btnclonarSerie.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                nuevaSerieClonada();
+            }
+        });
+//------------------------------------------------------------------------------------------------------   
+        GroupLayout layout = new GroupLayout(panelTemporada);
+        panelTemporada.setLayout(layout);
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
+    
+        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(lblTemporadas)
+            .addComponent(btnAnnadirTemporada)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(scrollTemporadas)
+                .addContainerGap()
+            )
+        );
+        layout.setVerticalGroup(layout.createSequentialGroup()
+            .addComponent(lblTemporadas)
+            .addGap(15)
+            .addComponent(btnAnnadirTemporada)
+            .addComponent(scrollTemporadas)
+            .addGap(15)
+        );
+//------------------------------------------------------------------------------------------------------
+        GroupLayout layoutPanelEntrenamiento = new GroupLayout(panelEntrenamiento);
+        panelEntrenamiento.setLayout(layoutPanelEntrenamiento);
+        layoutPanelEntrenamiento.setAutoCreateGaps(true);
+        layoutPanelEntrenamiento.setAutoCreateContainerGaps(true);
         
-        layout.setHorizontalGroup(layout.createSequentialGroup()
-            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
+        layoutPanelEntrenamiento.setHorizontalGroup(layoutPanelEntrenamiento.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(lblTemporadaInfo)
+            .addGroup(layoutPanelEntrenamiento.createSequentialGroup()
+                .addGap(20)//Margen del formulario
+                .addGroup(layoutPanelEntrenamiento.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(lblFechaInicio)
+                    .addComponent(lblDescripcionTemporada)  
+                )
+                .addGroup(layoutPanelEntrenamiento.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(txtFechaInicio,GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtDescripcionTemporada,GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)
+                )
+                .addGap(20)
+                .addGroup(layoutPanelEntrenamiento.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(btnGuardarTemporada)
+                )
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+            )
+            .addComponent(lblEntrenamientos)
+            .addComponent(btnAnnadirEntrenamiento)
+            .addGroup(layoutPanelEntrenamiento.createSequentialGroup()
+                .addComponent(scrollEntrenamientos)
+                .addContainerGap()
+            )
+        );
+        layoutPanelEntrenamiento.setVerticalGroup(layoutPanelEntrenamiento.createSequentialGroup()
+            .addComponent(lblTemporadaInfo)
+            .addGap(15)
+            .addGroup(layoutPanelEntrenamiento.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addGroup(layoutPanelEntrenamiento.createSequentialGroup()
+                    .addComponent(lblFechaInicio,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblDescripcionTemporada,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                )
+                .addGroup(layoutPanelEntrenamiento.createSequentialGroup()
+                    .addComponent(txtFechaInicio,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)              
+                    .addComponent(txtDescripcionTemporada,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                )
+                .addGroup(layoutPanelEntrenamiento.createSequentialGroup()
+                    .addComponent(btnGuardarTemporada,GroupLayout.PREFERRED_SIZE,20,GroupLayout.PREFERRED_SIZE)
+                )
+            )
+            .addGap(15)
+            .addComponent(lblEntrenamientos)
+            .addGap(15)
+            .addComponent(btnAnnadirEntrenamiento)
+            .addComponent(scrollEntrenamientos)
+            .addGap(15)
+        );
+//------------------------------------------------------------------------------------------------------
+        GroupLayout layoutPanelEjercicio = new GroupLayout(panelEjercicio);
+        panelEjercicio.setLayout(layoutPanelEjercicio);
+        layoutPanelEjercicio.setAutoCreateGaps(true);
+        layoutPanelEjercicio.setAutoCreateContainerGaps(true);
+        
+        layoutPanelEjercicio.setHorizontalGroup(layoutPanelEjercicio.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(lblEntrenamientoInfo)
+            .addGroup(layoutPanelEjercicio.createSequentialGroup()
+                .addGap(20)//Margen del formulario
+                .addGroup(layoutPanelEjercicio.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(lblFecha)
+                    .addComponent(lblPesoCorporal)
+                    .addComponent(lblDescripcionEntrenamiento)  
+                )
+                .addGroup(layoutPanelEjercicio.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(txtFecha,GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtPesoCorporal,GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtDescripcionEntrenamiento,GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)
+                )
+                .addGap(20)
+                .addGroup(layoutPanelEjercicio.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(btnGuardarEntrenamiento)
+                )
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+            )
+
+            .addComponent(lblEjercicios)
+            .addComponent(btnAnnadirEjercicio)                
+            .addGroup(layoutPanelEjercicio.createSequentialGroup()
+                .addComponent(scrollEjercicios)
+                .addContainerGap()
+            )
+        );
+        layoutPanelEjercicio.setVerticalGroup(layoutPanelEjercicio.createSequentialGroup()
+            .addComponent(lblEntrenamientoInfo)
+            .addGap(15)
+            .addGroup(layoutPanelEjercicio.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addGroup(layoutPanelEjercicio.createSequentialGroup()
+                    .addComponent(lblFecha,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblPesoCorporal,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblDescripcionEntrenamiento,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                )
+                .addGroup(layoutPanelEjercicio.createSequentialGroup()
+                    .addComponent(txtFecha,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtPesoCorporal,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)               
+                    .addComponent(txtDescripcionEntrenamiento,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                )
+                .addGroup(layoutPanelEjercicio.createSequentialGroup()
+                    .addComponent(btnGuardarEntrenamiento,GroupLayout.PREFERRED_SIZE,20,GroupLayout.PREFERRED_SIZE)
+                )
+            )
+
+            .addGap(15)
+            .addComponent(lblEjercicios)
+            .addGap(15)
+            .addComponent(btnAnnadirEjercicio)
+            .addComponent(scrollEjercicios)
+            .addGap(15)
+        );
+//------------------------------------------------------------------------------------------------------
+        GroupLayout layoutPanelSerie = new GroupLayout(panelSerie);
+        panelSerie.setLayout(layoutPanelSerie);
+        layoutPanelSerie.setAutoCreateGaps(true);
+        layoutPanelSerie.setAutoCreateContainerGaps(true);
+        
+        layoutPanelSerie.setHorizontalGroup(layoutPanelSerie.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(lblEjercicioInfo)
+            .addGroup(layoutPanelSerie.createSequentialGroup()//Grupo del formulario y boton
+                .addGap(20)//Margen del formulario
+                .addGroup(layoutPanelSerie.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(lblNombre)
+                    .addComponent(lblVariante)
+                    .addComponent(lblDescripcionEjercicio)  
+                )
+                .addGroup(layoutPanelSerie.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(txtNombre,GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtVariante,GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtDescripcionEjercicio,GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)
+                )
+                .addGap(20)
+                .addGroup(layoutPanelSerie.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(btnGuardarEjercicio)
+                    .addComponent(btnAnnadirEjercicio)
+                )
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+            )
+            .addComponent(lblSeries)
+            .addComponent(btnAnnadirSerie)
+            .addGroup(layoutPanelSerie.createSequentialGroup()//Grupo de la lista de series
+                .addComponent(scrollSeries)
+                .addContainerGap()
+            )
+            .addComponent(lblSerieInfo)
+            .addGroup(layoutPanelSerie.createSequentialGroup()
+                .addGap(20)//Margen del formulario
+                .addGroup(layoutPanelSerie.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(lblPeso)
-                    .addComponent(txtPeso,GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
-                    //.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 45, GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblRepeticiones)
-                    .addComponent(txtRepeticiones,GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE))
-                .addGroup(layout.createSequentialGroup()
-                    .addComponent(lblExtra)
-                    .addComponent(txtExtra,GroupLayout.PREFERRED_SIZE, 230, GroupLayout.PREFERRED_SIZE)))
-            .addGap(20)
-            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addComponent(btnGuardarSerie)
-                .addComponent(btnAnnadirSerie)
+                    .addComponent(lblExtra)  
+                )
+                .addGroup(layoutPanelSerie.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(txtPeso,GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtRepeticiones,GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtExtra,GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)
+                )
+                .addGap(20)
+                .addGroup(layoutPanelSerie.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(btnGuardarSerie)
+                    .addComponent(btnclonarSerie)
+                )
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
             )
+
         );
-        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        layoutPanelSerie.setVerticalGroup(layoutPanelSerie.createSequentialGroup()
+            .addComponent(lblEjercicioInfo)
+            .addGap(15)
+            .addGroup(layoutPanelSerie.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addGroup(layoutPanelSerie.createSequentialGroup()
+                    .addComponent(lblNombre,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblVariante,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblDescripcionEjercicio,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                )
+                .addGroup(layoutPanelSerie.createSequentialGroup()
+                    .addComponent(txtNombre,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtVariante,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)               
+                    .addComponent(txtDescripcionEjercicio,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                )
+                .addGroup(layoutPanelSerie.createSequentialGroup()
+                    .addComponent(btnGuardarEjercicio,GroupLayout.PREFERRED_SIZE,20,GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAnnadirEjercicio,GroupLayout.PREFERRED_SIZE,20,GroupLayout.PREFERRED_SIZE)
+                )
+            )
+            .addGap(15)
+            .addComponent(lblSeries)
+            .addGap(15)
+            .addComponent(btnAnnadirSerie,GroupLayout.PREFERRED_SIZE,20,GroupLayout.PREFERRED_SIZE)
+            .addComponent(scrollSeries)
+            .addGap(15)
+            .addComponent(lblSerieInfo)
+            .addGap(15)
+            .addGroup(layoutPanelSerie.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addGroup(layoutPanelSerie.createSequentialGroup()
                     .addComponent(lblPeso,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtPeso,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblRepeticiones,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtRepeticiones,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(lblExtra,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtExtra,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(btnGuardarSerie)
-                .addComponent(btnAnnadirSerie)
+                )
+                .addGroup(layoutPanelSerie.createSequentialGroup()
+                    .addComponent(txtPeso,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtRepeticiones,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)               
+                    .addComponent(txtExtra,javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                )
+                .addGroup(layoutPanelSerie.createSequentialGroup()
+                    .addComponent(btnGuardarSerie,GroupLayout.PREFERRED_SIZE,20,GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnclonarSerie,GroupLayout.PREFERRED_SIZE,20,GroupLayout.PREFERRED_SIZE)
+                )
             )
+            .addGap(50)
         );
-    }
-    
-    /*=========================================================================================
-            Métodos de actualización de registros y formulario
-    ===========================================================================================*/
-    
-    private void recargarCamposTemporada(){
-        clearTemporada();
-        if(temporadaSeleccionada != null){
-            Temporada temporada = temporadaSeleccionada.getTemporada();
-            if(temporada != null){
-                if(temporada.getFechaInicio() != null){
-                    txtFechaInicio.setText(temporada.getFechaInicio().toString());
-                }
-                if(temporada.getFechaFin() != null){
-                    txtFechaFin.setText(temporada.getFechaFin().toString());
-                }      
-                if(temporada.getDescripcion() != null){
-                    txtDescripcionTemporada.setText(temporada.getDescripcion());
-                }
-            }   
-        }
-    }
-    
-    private void actualizarTemporada(){
-        Temporada temporada = temporadaSeleccionada.getTemporada();
-        try{
-            temporada.setFechaInicio(Date.valueOf(txtFechaInicio.getText()));
-            temporada.setFechaFin(Date.valueOf(txtFechaInicio.getText()));
-        }
-        catch(java.lang.IllegalArgumentException iae){
-            JOptionPane.showMessageDialog(this, "La fecha introducida es erronea", "Fecha erronea",JOptionPane.WARNING_MESSAGE );
-        }
-        temporada.setDescripcion(txtDescripcionTemporada.getText());
-        GestorBaseDatos.actualizarTemporada(temporada);
-        temporadaSeleccionada.generarTexto();
-        temporadaSeleccionada.updateUI();  
-    }
-    
-    private void recargarCamposEntrenamiento(){
-        clearEntrenamiento();
-        if(entrenamientoSeleccionado != null){
-            Entrenamiento entrenamiento = entrenamientoSeleccionado.getEntrenamiento();
-            if(entrenamiento != null){
-                if(entrenamiento.getFecha() != null){
-                    txtFecha.setText(entrenamiento.getFecha().toString());
-                }
-                txtPesoCorporal.setText(Float.toString(entrenamiento.getPesoCorporal()));   
-                if(entrenamiento.getDescripcion() != null){
-                    txtDescripcionEntrenamiento.setText(entrenamiento.getDescripcion());
-                }
-            }
-        }
-    }
-    
-    private void actualizarEntrenamiento(){
-        Entrenamiento entrenamiento = entrenamientoSeleccionado.getEntrenamiento();
-        try{
-            entrenamiento.setFecha(Date.valueOf(txtFecha.getText()));
-            entrenamiento.setPesoCorporal(Float.parseFloat(txtPesoCorporal.getText()));
-        }
-        catch(java.lang.IllegalArgumentException iae){
-            JOptionPane.showMessageDialog(this, "La fecha o el peso introducido es erroneo", "Formato erroneo",JOptionPane.WARNING_MESSAGE );
-        }
-        entrenamiento.setDescripcion(txtDescripcionEntrenamiento.getText());
-        GestorBaseDatos.actualizarEntrenamiento(entrenamiento);
-        entrenamientoSeleccionado.generarTexto();
-        entrenamientoSeleccionado.updateUI();
         
-    }
-    
-    private void recargarCamposEjercicio(){
-        clearEjercicio();
-        if(ejercicioSeleccionado != null){
-            Ejercicio ejercicio = ejercicioSeleccionado.getEjercicio(); 
-            if(ejercicio != null){
-                if(ejercicio.getNombre() != null){
-                    txtNombre.setText(ejercicio.getNombre());
-                }
-                if(ejercicio.getVariante() != null){
-                    txtVariante.setText(ejercicio.getVariante()); 
-                }
-                if(ejercicio.getDescripcion() != null){
-                    txtDescripcionEjercicio.setText(ejercicio.getDescripcion());
-                }
-            }
-        }
-    }
-    
-    private void actualizarEjercicio(){
-        Ejercicio ejercicio = ejercicioSeleccionado.getEjercicio();
-        ejercicio.setNombre(txtNombre.getText());
-        ejercicio.setVariante(txtVariante.getText());
-        ejercicio.setDescripcion(txtDescripcionEjercicio.getText());
-        GestorBaseDatos.actualizarEjercicio(ejercicio);
-        ejercicioSeleccionado.generarTexto();
-        ejercicioSeleccionado.updateUI();
-    }
-    
-    private void recargarCamposSerie(){
-        clearSerie();
-        if(serieSeleccionada != null){
-            Serie serie = serieSeleccionada.getSerie();      
-            if(serie != null){
-                txtPeso.setText(Float.toString(serie.getPeso()));
-                txtRepeticiones.setText(Integer.toString(serie.getRepeticiones()));   
-                if(serie.getExtra() != null){
-                    txtExtra.setText(serie.getExtra());
-                }
-            }
-        }
-    }
-    
-    private void actualizarSerie(){
-        Serie serie = serieSeleccionada.getSerie();
-        try{
-            serie.setPeso(Float.parseFloat(txtPeso.getText()));
-            serie.setRepeticiones(Integer.parseInt(txtRepeticiones.getText()));
-        }
-        catch(java.lang.IllegalArgumentException iae){
-            JOptionPane.showMessageDialog(this, "Peso o repeticiones incorrectos", "Formato erroneo",JOptionPane.WARNING_MESSAGE );
-        }
-        serie.setExtra(txtExtra.getText());
-        GestorBaseDatos.actualizarSerie(serie);
-        serieSeleccionada.generarTexto();
-        serieSeleccionada.updateUI();
+        //Estableciendo todos los SplitPane de la pantalla
+        panelEdicion.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+        panelEdicion.setRightComponent(panelEjercicioSerie);
+        panelEdicion.setLeftComponent(panelTemporadaEntrenamiento);
+        panelEdicion.setDividerLocation(400);
         
+        panelTemporadaEntrenamiento.setOrientation(JSplitPane.VERTICAL_SPLIT);
+        panelTemporadaEntrenamiento.setTopComponent(panelTemporada);
+        panelTemporadaEntrenamiento.setBottomComponent(panelEntrenamiento);
+        panelTemporadaEntrenamiento.setDividerLocation(250);
+        
+        panelEjercicioSerie.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+        panelEjercicioSerie.setRightComponent(panelSerie);
+        panelEjercicioSerie.setLeftComponent(panelEjercicio);
+        panelEjercicioSerie.setDividerLocation(390);
     }
-    
+
     /*=========================================================================================
             Métodos de funcionalidad
     ===========================================================================================*/
@@ -943,8 +958,7 @@ public class InterfazUsuario extends JFrame implements MouseListener{
         panelListaTemporadas.updateUI();
     }
     
-    public void annadirEntrenamientos(ArrayList <Entrenamiento> entrenamientos){
-        
+    public void annadirEntrenamientos(ArrayList <Entrenamiento> entrenamientos){   
         panelListaEntrenamientos.removeAll();
         for(Entrenamiento ent : entrenamientos){
             panelListaEntrenamientos.add(new PanelEntrenamiento(ent,this,this));
@@ -953,7 +967,6 @@ public class InterfazUsuario extends JFrame implements MouseListener{
     }
     
     public void annadirEjercicios(ArrayList <Ejercicio> ejercicios){
-        
         panelListaEjercicios.removeAll();
         for(Ejercicio ej: ejercicios){
             panelListaEjercicios.add(new PanelEjercicio(ej,this,this));
@@ -962,7 +975,6 @@ public class InterfazUsuario extends JFrame implements MouseListener{
     }
     
     public void annadirSeries(ArrayList <Serie> series){
-        
         panelListaSeries.removeAll();
         for(Serie s : series){
             panelListaSeries.add(new PanelSerie(s,this,this));
@@ -970,14 +982,13 @@ public class InterfazUsuario extends JFrame implements MouseListener{
         panelListaSeries.updateUI();
     }
 
-    
     //Métodos para limpiar en cascada las listas de los subcontenedores de cada entidad
     private void clearTemporada(){
         txtFechaInicio.setText("");
-        txtFechaFin.setText("");
         txtDescripcionTemporada.setText("");
         panelListaEntrenamientos.removeAll();
         panelListaEntrenamientos.updateUI();
+        entrenamientoSeleccionado = null;
         clearEntrenamiento();
     }
     private void clearEntrenamiento(){
@@ -986,6 +997,7 @@ public class InterfazUsuario extends JFrame implements MouseListener{
         txtDescripcionEntrenamiento.setText("");
         panelListaEjercicios.removeAll();
         panelListaEjercicios.updateUI();
+        ejercicioSeleccionado = null;
         clearEjercicio();
     }
     private void clearEjercicio(){
@@ -994,6 +1006,7 @@ public class InterfazUsuario extends JFrame implements MouseListener{
         txtDescripcionEjercicio.setText("");
         panelListaSeries.removeAll();
         panelListaSeries.updateUI();
+        serieSeleccionada = null;
         clearSerie();
     }
     
@@ -1007,42 +1020,30 @@ public class InterfazUsuario extends JFrame implements MouseListener{
     //Métodos de creación de registros
     private void nuevaTemporada(){
         Temporada temporada = new Temporada();
-        if( ! txtFechaInicio.getText().isEmpty())
-            temporada.setFechaInicio(Date.valueOf(txtFechaInicio.getText()));
-        else{
-            temporada.setFechaInicio((Date)Date.valueOf(LocalDate.now()));    
-        }
-        if( ! txtFechaFin.getText().isEmpty())
-            temporada.setFechaFin(Date.valueOf(txtFechaFin.getText()));
-
-        temporada.setDescripcion(txtDescripcionTemporada.getText());
-        
+        temporada.setFechaInicio((Date)Date.valueOf(LocalDate.now()));
+        temporada.setDescripcion("Sin nombrar");
         GestorBaseDatos.nuevaTemporada(temporada);
-        seleccionar( new PanelTemporada(temporada,this,this));
-        panelListaTemporadas.add(temporadaSeleccionada);
-        panelListaTemporadas.updateUI();
+        reselecionarTemporada(temporada);
     }
     
     private void nuevoEntrenamiento(){
         if(temporadaSeleccionada != null){
             Entrenamiento entrenamiento = new Entrenamiento();
-            if( ! txtFecha.getText().isEmpty())
-                entrenamiento.setFecha(Date.valueOf(txtFecha.getText()));
-            else{
-                entrenamiento.setFecha((Date)Date.valueOf(LocalDate.now()));    
+            entrenamiento.setFecha((Date)Date.valueOf(LocalDate.now()));    
+            if( ! txtPesoCorporal.getText().isEmpty()){
+                try{
+                    entrenamiento.setPesoCorporal(Float.parseFloat(txtPesoCorporal.getText()));
+                }
+                catch(java.lang.IllegalArgumentException iae){
+                    JOptionPane.showMessageDialog(this, "Peso corporal erroneo", "",JOptionPane.WARNING_MESSAGE );
+                }
             }
-            if( ! txtPesoCorporal.getText().isEmpty())
-                entrenamiento.setPesoCorporal(Float.parseFloat(txtPesoCorporal.getText()));
-
             entrenamiento.setDescripcion(txtDescripcionEntrenamiento.getText());
             entrenamiento.setIdTemporada(temporadaSeleccionada.getTemporada().getId());
 
             GestorBaseDatos.nuevoEntrenamiento(entrenamiento);
-            seleccionar(new PanelEntrenamiento(entrenamiento,this,this));
-            panelListaEntrenamientos.add(entrenamientoSeleccionado);
-            panelListaEntrenamientos.updateUI();
-        }
-        else{
+            reseleccionarEntrenamiento(entrenamiento);
+        }else{
             JOptionPane.showMessageDialog(new JPanel(), "No hay ninguna temporada seleccionada", "", JOptionPane.INFORMATION_MESSAGE);
         }
     }
@@ -1050,17 +1051,13 @@ public class InterfazUsuario extends JFrame implements MouseListener{
     private void nuevoEjercicio(){
         if(entrenamientoSeleccionado != null){
             Ejercicio ejercicio = new Ejercicio();
-            ejercicio.setNombre(txtNombre.getText());
-            ejercicio.setVariante(txtVariante.getText());
-            ejercicio.setDescripcion(txtDescripcionEjercicio.getText());
             ejercicio.setIdEntrenamiento(entrenamientoSeleccionado.getEntrenamiento().getId());
 
             GestorBaseDatos.nuevoEjercicio(ejercicio);
             seleccionar(new PanelEjercicio(ejercicio,this,this));
             panelListaEjercicios.add(ejercicioSeleccionado);
             panelListaEjercicios.updateUI();
-        }
-        else{
+        }else{
             JOptionPane.showMessageDialog(new JPanel(), "No hay ningún entrenamiento seleccionado", "", JOptionPane.INFORMATION_MESSAGE);
         }
     }
@@ -1068,22 +1065,185 @@ public class InterfazUsuario extends JFrame implements MouseListener{
     private void nuevaSerie(){
         if(ejercicioSeleccionado != null){
             Serie serie = new Serie();
+            serie.setIdEjercicio(ejercicioSeleccionado.getEjercicio().getId());
+            GestorBaseDatos.nuevaSerie(serie);
+            seleccionar(new PanelSerie(serie,this,this));
+            panelListaSeries.add(serieSeleccionada);
+            panelListaSeries.updateUI();
+        }else{
+            JOptionPane.showMessageDialog(new JPanel(), "No hay ningún ejercicio seleccionado", "", JOptionPane.INFORMATION_MESSAGE);
+        }        
+    }
+    private void nuevaSerieClonada(){
+        if(ejercicioSeleccionado != null && serieSeleccionada != null){
+            Serie serieAClonar = serieSeleccionada.getSerie();
+            Serie serie = new Serie();
             
-            if( ! txtPeso.getText().isEmpty())
-                serie.setPeso(Float.parseFloat(txtPeso.getText()));
-            if( ! txtRepeticiones.getText().isEmpty())
-                serie.setRepeticiones(Integer.parseInt(txtRepeticiones.getText()));
-            
-            serie.setExtra(txtExtra.getText());
+            serie.setPeso(serieAClonar.getPeso());
+            serie.setRepeticiones(serieAClonar.getRepeticiones());
+            serie.setExtra(serieAClonar.getExtra());
             serie.setIdEjercicio(ejercicioSeleccionado.getEjercicio().getId());
 
             GestorBaseDatos.nuevaSerie(serie);
             seleccionar(new PanelSerie(serie,this,this));
             panelListaSeries.add(serieSeleccionada);
             panelListaSeries.updateUI();
-        }
-        else{
-            JOptionPane.showMessageDialog(new JPanel(), "No hay ningún ejercicio seleccionado", "", JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            JOptionPane.showMessageDialog(new JPanel(), "No hay ningún ejercicio o serie seleccionada", "", JOptionPane.INFORMATION_MESSAGE);
         }        
+    }
+    
+    private void actualizarTemporada(){
+        Temporada temporada = temporadaSeleccionada.getTemporada();
+        try{
+            temporada.setFechaInicio(Date.valueOf(txtFechaInicio.getText()));
+        }
+        catch(java.lang.IllegalArgumentException iae){
+            JOptionPane.showMessageDialog(this, "La fecha introducida es erronea", "Fecha erronea",JOptionPane.WARNING_MESSAGE );
+        }
+        temporada.setDescripcion(txtDescripcionTemporada.getText());
+        GestorBaseDatos.actualizarTemporada(temporada);
+        reselecionarTemporada(temporada); 
+    }
+    
+    private void actualizarEntrenamiento(){
+        try{
+            Entrenamiento entrenamiento = entrenamientoSeleccionado.getEntrenamiento();
+            try{
+                entrenamiento.setFecha(Date.valueOf(txtFecha.getText()));
+                entrenamiento.setPesoCorporal(Float.parseFloat(txtPesoCorporal.getText()));
+            }
+            catch(java.lang.IllegalArgumentException iae){
+                JOptionPane.showMessageDialog(this, "La fecha o el peso introducido es erroneo", "Formato erroneo",JOptionPane.WARNING_MESSAGE );
+            }
+            entrenamiento.setDescripcion(txtDescripcionEntrenamiento.getText());
+            GestorBaseDatos.actualizarEntrenamiento(entrenamiento);
+            reseleccionarEntrenamiento(entrenamiento);
+        }catch(NullPointerException e){
+            JOptionPane.showMessageDialog(new JPanel(), "No hay ningún elemento seleccionado", "", JOptionPane.INFORMATION_MESSAGE);
+        }  
+    }
+    private void actualizarEjercicio(){
+        try{
+            Ejercicio ejercicio = ejercicioSeleccionado.getEjercicio();
+            ejercicio.setNombre(txtNombre.getText());
+            ejercicio.setVariante(txtVariante.getText());
+            ejercicio.setDescripcion(txtDescripcionEjercicio.getText());
+            GestorBaseDatos.actualizarEjercicio(ejercicio);
+            ejercicioSeleccionado.generarTexto();
+            ejercicioSeleccionado.updateUI();
+        }catch(NullPointerException e){
+            JOptionPane.showMessageDialog(new JPanel(), "No hay ningún elemento seleccionado", "", JOptionPane.INFORMATION_MESSAGE);
+        } 
+    }
+    private void actualizarSerie(){
+        try{
+            Serie serie = serieSeleccionada.getSerie();
+            try{
+                serie.setPeso(Float.parseFloat(txtPeso.getText()));
+                serie.setRepeticiones(Integer.parseInt(txtRepeticiones.getText()));
+            }
+            catch(java.lang.IllegalArgumentException iae){
+                JOptionPane.showMessageDialog(this, "Peso o repeticiones incorrectos", "Formato erroneo",JOptionPane.WARNING_MESSAGE );
+            }
+            serie.setExtra(txtExtra.getText());
+            GestorBaseDatos.actualizarSerie(serie);
+            serieSeleccionada.generarTexto();
+            serieSeleccionada.updateUI();
+        }catch(NullPointerException e){
+            JOptionPane.showMessageDialog(new JPanel(), "No hay ningún elemento seleccionado", "", JOptionPane.INFORMATION_MESSAGE);
+        } 
+    }
+    
+    //Metodos de actualización para registros que contienen fecha y su orden depende de ella
+    
+    private void reselecionarTemporada(Temporada temporada){
+        annadirTemporadas(GestorBaseDatos.getTemporadas());
+        PanelTemporada panelTemporada = null;
+        //Para seleccionar el nuevo panel habrá que buscarlo en la lista de paneles de temporada
+        for(Component c : panelListaTemporadas.getComponents()){
+            if(c instanceof PanelTemporada){
+                if(((PanelTemporada)c).getTemporada().getId() == temporada.getId())
+                panelTemporada = (PanelTemporada)c;
+            }
+        }
+        temporadaSeleccionada = null;
+        seleccionar(panelTemporada);
+        panelListaTemporadas.updateUI();
+    }
+    
+    private void reseleccionarEntrenamiento(Entrenamiento entrenamiento){
+        annadirEntrenamientos(GestorBaseDatos.getEntrenamientos(entrenamiento.getIdTemporada()));
+        PanelEntrenamiento panelEntrenamiento = null;
+        //Para seleccionar el nuevo panel habrá que buscarlo en la lista de paneles de entrenamientos
+        for(Component c : panelListaEntrenamientos.getComponents()){
+            if(c instanceof PanelEntrenamiento){
+                if(((PanelEntrenamiento)c).getEntrenamiento().getId() == entrenamiento.getId())
+                panelEntrenamiento = (PanelEntrenamiento)c;
+            }
+        }
+        entrenamientoSeleccionado = null;
+        seleccionar(panelEntrenamiento);
+        panelListaEntrenamientos.updateUI();
+    }
+    
+    private void recargarCamposTemporada(){
+        clearTemporada();
+        if(temporadaSeleccionada != null){
+            Temporada temporada = temporadaSeleccionada.getTemporada();
+            if(temporada != null){
+                if(temporada.getFechaInicio() != null){
+                    txtFechaInicio.setText(temporada.getFechaInicio().toString());
+                }    
+                if(temporada.getDescripcion() != null){
+                    txtDescripcionTemporada.setText(temporada.getDescripcion());
+                }
+            }   
+        }
+    }
+    private void recargarCamposEntrenamiento(){
+        clearEntrenamiento();
+        if(entrenamientoSeleccionado != null){
+            Entrenamiento entrenamiento = entrenamientoSeleccionado.getEntrenamiento();
+            if(entrenamiento != null){
+                if(entrenamiento.getFecha() != null){
+                    txtFecha.setText(entrenamiento.getFecha().toString());
+                }
+                txtPesoCorporal.setText(Float.toString(entrenamiento.getPesoCorporal()));   
+                if(entrenamiento.getDescripcion() != null){
+                    txtDescripcionEntrenamiento.setText(entrenamiento.getDescripcion());
+                }
+            }
+        }
+    }
+    private void recargarCamposEjercicio(){
+        clearEjercicio();
+        if(ejercicioSeleccionado != null){
+            Ejercicio ejercicio = ejercicioSeleccionado.getEjercicio(); 
+            if(ejercicio != null){
+                if(ejercicio.getNombre() != null){
+                    txtNombre.setText(ejercicio.getNombre());
+                }
+                if(ejercicio.getVariante() != null){
+                    txtVariante.setText(ejercicio.getVariante()); 
+                }
+                if(ejercicio.getDescripcion() != null){
+                    txtDescripcionEjercicio.setText(ejercicio.getDescripcion());
+                }
+            }
+        }
+    }
+    private void recargarCamposSerie(){
+        clearSerie();
+        if(serieSeleccionada != null){
+            Serie serie = serieSeleccionada.getSerie();      
+            if(serie != null){
+                txtPeso.setText(Float.toString(serie.getPeso()));
+                txtRepeticiones.setText(Integer.toString(serie.getRepeticiones()));   
+                if(serie.getExtra() != null){
+                    txtExtra.setText(serie.getExtra());
+                }
+            }
+        }
     }
 }
