@@ -126,6 +126,11 @@ public class Ejercicio implements Serializable{
         }
         r = (n==1)? "": (n+"x");
         sb.append(r + reps + ")");
+        
+        for(Serie s : series){
+            String ex = (s.getExtra() == null || s.getExtra().isEmpty())?  "" : ("(" +s.getNumSerie() +": " +  s.getExtra() + ")");
+            sb.append(ex);
+        }
         return sb.toString();
     }
     

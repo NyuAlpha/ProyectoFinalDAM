@@ -16,7 +16,7 @@
       </composite-id>
       
       <property name = "peso" column = "peso" type = "float"/>
-      <property name = "repeticiones" column = "rep" type = "int"/>
+      <property name = "repeticiones" column = "repeticiones" type = "int"/>
       <property name = "extra" column = "extra" type = "string"/>
       
    </class>

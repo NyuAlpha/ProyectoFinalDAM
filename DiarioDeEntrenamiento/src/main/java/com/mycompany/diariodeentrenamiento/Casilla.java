@@ -1,13 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.diariodeentrenamiento;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
@@ -22,18 +17,18 @@ import javax.swing.JPanel;
  *
  * @author victo
  */
-public abstract class PanelDatos extends JPanel{
+public abstract class Casilla extends JPanel{
         
-    InterfazUsuario interfaz;
+    PanelEdicion interfaz;
     JButton btnEliminar;
     JLabel texto;
     boolean seleccionado;
-    protected Object entidad;
+    protected Object registro;
     
-    public PanelDatos(MouseListener listener,InterfazUsuario interfaz,Object entidad){
+    public Casilla(MouseListener listener,PanelEdicion interfaz,Object entidad){
         
         this.interfaz = interfaz;
-        this.entidad = entidad;
+        this.registro = entidad;
         seleccionado = false;
         
         this.setBackground(new Color(214,214,224));
@@ -48,12 +43,12 @@ public abstract class PanelDatos extends JPanel{
         btnEliminar.setToolTipText("Eliminar");
         
         texto = new JLabel();
+        texto.setForeground(Color.BLACK);
         
         btnEliminar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 if(JOptionPane.showConfirmDialog(null, "¿Está segur@ de que desea eliminar este elemento para siempre?", "", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION ){
                     eliminar();
-                    JOptionPane.showMessageDialog(null,"¡Eliminado con exito!");
                 }
             }
         });
@@ -62,8 +57,6 @@ public abstract class PanelDatos extends JPanel{
         
         this.add(BorderLayout.EAST,btnEliminar);
         this.add(BorderLayout.WEST,texto);
-        
-
     }
     
     public abstract void eliminar();
@@ -101,7 +94,7 @@ public abstract class PanelDatos extends JPanel{
     }
     
     protected void generarTexto(){
-        String txt = entidad.toString();
+        String txt = registro.toString();
         int max = 50;
         if(txt.length() > max){
             txt = txt.substring(0, max);

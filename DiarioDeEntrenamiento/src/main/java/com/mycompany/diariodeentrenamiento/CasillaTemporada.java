@@ -11,25 +11,25 @@ import java.awt.event.MouseListener;
  *
  * @author victo
  */
-public class PanelTemporada extends PanelDatos {
+public class CasillaTemporada extends Casilla {
     
-    public PanelTemporada(Temporada temporada,MouseListener listener,InterfazUsuario interfaz){
+    public CasillaTemporada(Temporada temporada,MouseListener listener,PanelEdicion interfaz){
         
         super(listener,interfaz,temporada);
         generarTexto();
     }
     
     public void eliminar(){
-         GestorBaseDatos.eliminarTemporada((Temporada)entidad);
+         GestorBaseDatos.eliminarTemporada((Temporada)registro);
          interfaz.eliminarPanelTemporada(this);
     }
     
     public void generarLista(){
-        interfaz.annadirEntrenamientos(GestorBaseDatos.getEntrenamientos(((Temporada)entidad).getId()));
+        interfaz.addEntrenamientos(GestorBaseDatos.getEntrenamientos(((Temporada)registro).getId()));
     }
 
     public Temporada getTemporada() {
-        return (Temporada)entidad;
+        return (Temporada)registro;
     }
 
     

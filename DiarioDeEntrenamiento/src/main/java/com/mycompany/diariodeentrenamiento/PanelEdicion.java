@@ -19,37 +19,28 @@ import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 /**
  *
  * @author victo
+ * Esta clase es la interfaz gráfica de usuario del panel de edición de la aplicación
  */
-public class InterfazUsuario extends JFrame implements MouseListener{
+public class PanelEdicion extends JSplitPane implements MouseListener{
     
-    private JTabbedPane tabbedPane;
-    
-/*=======================================================================
+    /*=======================================================================
     Variables del panel de edición
 =========================================================================*/
     
-    private JSplitPane panelEdicion;
     private JSplitPane panelTemporadaEntrenamiento;
     private JSplitPane panelEjercicioSerie;
-    
     
     private JScrollPane scrollTemporadas;
     private JScrollPane scrollEntrenamientos;
@@ -57,10 +48,10 @@ public class InterfazUsuario extends JFrame implements MouseListener{
     private JScrollPane scrollSeries;
     
     //Los 4 posibles objetos seleccionables al mismo tiempo de la aplicación
-    private PanelTemporada temporadaSeleccionada;
-    private PanelEntrenamiento entrenamientoSeleccionado;
-    private PanelEjercicio ejercicioSeleccionado;
-    private PanelSerie serieSeleccionada;
+    private CasillaTemporada temporadaSeleccionada;
+    private CasillaEntrenamiento entrenamientoSeleccionado;
+    private CasillaEjercicio ejercicioSeleccionado;
+    private CasillaSerie serieSeleccionada;
     
 /*=======================================================================
     Paneles
@@ -123,270 +114,12 @@ public class InterfazUsuario extends JFrame implements MouseListener{
     private JButton btnAnnadirSerie;
     private JButton btnclonarSerie;
     
-    
-    
-/*=======================================================================
-    Variables del panel de búsqueda
-=========================================================================*/
-    private JPanel panelBusqueda;
-    private JTextArea textA;
-    private JTextArea textB;
-    private JLabel lblFechaMinima;
-    private JLabel lblFechaMaxima;
-    private JLabel lblEjercicio;
-    private JLabel lblTemporada;
-    private JLabel lblPesoCorporalMinimo;
-    private JLabel lblPesoCorporalMaximo;
-    private JLabel lblPesoMinimo;
-    private JLabel lblPesoMaximo;
-
-    private JComboBox cbEjercicio;
-    private JComboBox cbTemporada;
-    private JTextField txtFechaMinima;
-    private JTextField txtFechaMaxima;
-    private JTextField txtPesoCorporalMinimo;
-    private JTextField txtPesoCorporalMaximo;
-    private JTextField txtPesoMinimo;
-    private JTextField txtPesoMaximo;
-    private JButton btnFiltrar;
-    private JButton btnTransferir;
-    
-    private JScrollPane scrollPaneA;
-    private JScrollPane scrollPaneB;
-
-    
-    public static void main(String[] args){
-        new InterfazUsuario();
-    }
-    
-/*=======================================================================
-    Métodos de la clase
-=========================================================================*/
-    
-    public InterfazUsuario(){
+    public PanelEdicion(){
         
-        crearPanelEdicion();
-        crearPanelBusqueda();
+/*=================================================================================================
+                      Tabbed del panel de edición
+    ===================================================================================================*/        
         
-        annadirTemporadas(GestorBaseDatos.getTemporadas());
-        
-        tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-        tabbedPane.addTab("Editor ",new ImageIcon(".\\src\\main\\java\\iconos\\edit.png"), panelEdicion);
-        tabbedPane.addTab("Buscador ",new ImageIcon(".\\src\\main\\java\\iconos\\search.png"), panelBusqueda);
-        add(tabbedPane);
-        
-        tabbedPane.addChangeListener(new ChangeListener(){
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                JTabbedPane tp = (JTabbedPane)e.getSource();
-                if(tp.getSelectedComponent() == panelBusqueda)
-                    actualizarComboBoxEjercicio();
-                    actualizarComboBoxTemporada();
-            }
-        });
-        
-        setSize(1230,800);
-        setResizable(false);
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setVisible(true);
-    }
-    
-    private void crearPanelBusqueda(){
-        
-        panelBusqueda = new JPanel();
-        panelBusqueda.setBackground(new Color(250, 253, 138));
-        textA = new JTextArea();
-        textB = new JTextArea();
-        lblFechaMinima = new JLabel("Después de  ");
-        lblFechaMaxima = new JLabel("Antes de  ");
-        lblEjercicio = new JLabel("Ejercicio ");
-        lblTemporada = new JLabel("Temporada ");
-        lblPesoCorporalMinimo = new JLabel("Peso corporal mínimo ");
-        lblPesoCorporalMaximo = new JLabel("Peso corporal máximo ");
-        lblPesoMinimo = new JLabel("Peso levantado mínimo ");
-        lblPesoMaximo = new JLabel("Peso levantado máximo ");
-
-        cbEjercicio = new JComboBox();
-        cbTemporada = new JComboBox();
-        txtFechaMinima = new JTextField();
-        txtFechaMaxima = new JTextField();
-        txtPesoCorporalMinimo = new JTextField();
-        txtPesoCorporalMaximo = new JTextField();
-        txtPesoMinimo = new JTextField();
-        txtPesoMaximo = new JTextField();
-        btnFiltrar = new JButton("Filtrar");
-        btnTransferir = new JButton("-----Transferir---->");
-        
-        scrollPaneA = new JScrollPane();
-        scrollPaneB = new JScrollPane();
-        
-        scrollPaneA.setViewportView(textA);
-        scrollPaneB.setViewportView(textB);
-        scrollPaneA.getVerticalScrollBar().setUnitIncrement(10);
-        scrollPaneB.getVerticalScrollBar().setUnitIncrement(10);
-        scrollPaneA.setBackground(new Color(250, 162, 57));
-        scrollPaneB.setBackground(new Color(250, 162, 57));
-        scrollPaneA.setBorder(new EmptyBorder(5,5,5,5));
-        scrollPaneB.setBorder(new EmptyBorder(5,5,5,5));
-        
-        textA.setFont(new Font(Font.DIALOG,Font.BOLD,12));
-        textB.setFont(new Font(Font.DIALOG,Font.BOLD,12));
-                
-        actualizarComboBoxEjercicio();
-        actualizarComboBoxEjercicio();
-        
-
-
-        btnFiltrar.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                filtrar();
-            }
-        });
-        
-        btnTransferir.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                textB.setText(textA.getText());
-                textA.setText("");
-            }
-        });
-        
-        panelBusqueda.setLayout(new BoxLayout(panelBusqueda,BoxLayout.Y_AXIS));
-        
-        GroupLayout layoutBusqueda = new GroupLayout(panelBusqueda);
-        panelBusqueda.setLayout(layoutBusqueda);
-        
-        layoutBusqueda.setAutoCreateContainerGaps(true);
-        layoutBusqueda.setAutoCreateGaps(true);
-        
-        layoutBusqueda.setHorizontalGroup(layoutBusqueda.createSequentialGroup()
-            .addGroup(layoutBusqueda.createSequentialGroup()
-                .addGroup(layoutBusqueda.createParallelGroup(GroupLayout.Alignment.LEADING)
-                     .addComponent(lblFechaMinima)
-                     .addComponent(lblFechaMaxima)
-                     .addComponent(lblEjercicio)
-                     .addComponent(lblTemporada)
-                     .addComponent(lblPesoCorporalMinimo)
-                     .addComponent(lblPesoCorporalMaximo)
-                     .addComponent(lblPesoMinimo)
-                     .addComponent(lblPesoMaximo)
-                )
-                .addGroup(layoutBusqueda.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(txtFechaMinima,GroupLayout.PREFERRED_SIZE,70,GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtFechaMaxima,GroupLayout.PREFERRED_SIZE,70,GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbEjercicio,GroupLayout.PREFERRED_SIZE,140,GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbTemporada,GroupLayout.PREFERRED_SIZE,140,GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtPesoCorporalMinimo,GroupLayout.PREFERRED_SIZE,50,GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtPesoCorporalMaximo,GroupLayout.PREFERRED_SIZE,50,GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtPesoMinimo,GroupLayout.PREFERRED_SIZE,50,GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtPesoMaximo,GroupLayout.PREFERRED_SIZE,50,GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnFiltrar)
-                )
-            )
-            .addGroup(layoutBusqueda.createParallelGroup(GroupLayout.Alignment.CENTER)
-                .addGroup(layoutBusqueda.createSequentialGroup()
-                    .addComponent(scrollPaneA,GroupLayout.PREFERRED_SIZE,430,GroupLayout.PREFERRED_SIZE)
-                    .addComponent(scrollPaneB,GroupLayout.PREFERRED_SIZE,430,GroupLayout.PREFERRED_SIZE)
-                )
-                .addComponent(btnTransferir)
-            )
-        );
-        layoutBusqueda.setVerticalGroup(layoutBusqueda.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(layoutBusqueda.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addGroup(layoutBusqueda.createSequentialGroup()
-                    .addComponent(lblFechaMinima,GroupLayout.PREFERRED_SIZE,20,GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblFechaMaxima,GroupLayout.PREFERRED_SIZE,20,GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblEjercicio,GroupLayout.PREFERRED_SIZE,20,GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblTemporada,GroupLayout.PREFERRED_SIZE,20,GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblPesoCorporalMinimo,GroupLayout.PREFERRED_SIZE,20,GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblPesoCorporalMaximo,GroupLayout.PREFERRED_SIZE,20,GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblPesoMinimo,GroupLayout.PREFERRED_SIZE,20,GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblPesoMaximo,GroupLayout.PREFERRED_SIZE,20,GroupLayout.PREFERRED_SIZE)
-                )
-                .addGroup(layoutBusqueda.createSequentialGroup()
-                    .addComponent(txtFechaMinima,GroupLayout.PREFERRED_SIZE,20,GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtFechaMaxima,GroupLayout.PREFERRED_SIZE,20,GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbEjercicio,GroupLayout.PREFERRED_SIZE,20,GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbTemporada,GroupLayout.PREFERRED_SIZE,20,GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtPesoCorporalMinimo,GroupLayout.PREFERRED_SIZE,20,GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtPesoCorporalMaximo,GroupLayout.PREFERRED_SIZE,20,GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtPesoMinimo,GroupLayout.PREFERRED_SIZE,20,GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtPesoMaximo,GroupLayout.PREFERRED_SIZE,20,GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnFiltrar)
-                )
-            )
-            .addGroup(layoutBusqueda.createSequentialGroup()
-                .addGroup(layoutBusqueda.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(scrollPaneA)
-                    .addComponent(scrollPaneB)
-                )
-                .addComponent(btnTransferir)
-            )
-        );
-    }
-    
-    private void actualizarComboBoxTemporada(){
-        cbTemporada.removeAllItems();
-        cbTemporada.addItem("Todas");
-        for(String s : GestorBaseDatos.getListaTemporadas()){
-            cbTemporada.addItem(s);
-        }
-    }
-    
-    private void actualizarComboBoxEjercicio(){
-        cbEjercicio.removeAllItems();
-        cbEjercicio.addItem("Todos");
-        for(String s : GestorBaseDatos.getListaEjercicios()){
-            cbEjercicio.addItem(s);
-        }
-    }  
-    
-    private void filtrar(){
-        Filtro filtro = new Filtro();
-        filtro.setFechaMinima(txtFechaMinima.getText());
-        filtro.setFechaMaxima(txtFechaMaxima.getText());
-        filtro.setEjercicio(cbEjercicio.getSelectedItem().toString());
-        filtro.setTemporada(cbTemporada.getSelectedItem().toString());
-        filtro.setPesoCorporalMinimo(txtPesoCorporalMinimo.getText());
-        filtro.setPesoCorporalMaximo(txtPesoCorporalMaximo.getText());
-        filtro.setPesoMinimo(txtPesoMinimo.getText());
-        filtro.setPesoMaximo(txtPesoMaximo.getText());
-        ArrayList<Ejercicio> ejercicios = GestorBaseDatos.getConsulta(filtro.crearQuery());
-        textA.setText("");
-        //Entrenamiento entrenamientoPrevio = null;
-        Entrenamiento entrenamientoImprimir = null;
-        //Temporada temporadaPrevia = null;
-        Temporada temporadaImprimir = null;
-        boolean primerVez = true;
-
-        for(Ejercicio e : ejercicios){
-            if(primerVez){
-                entrenamientoImprimir = GestorBaseDatos.getEntrenamiento(e.getIdEntrenamiento());
-                temporadaImprimir = GestorBaseDatos.getTemporada(entrenamientoImprimir.getIdTemporada());
-                textA.append( "  " + temporadaImprimir + "\n");
-                textA.append("\n    " + entrenamientoImprimir + "\n");
-                primerVez = false;
-            }
-            else{
-
-                if(entrenamientoImprimir.getId() != e.getIdEntrenamiento()){
-                    entrenamientoImprimir = GestorBaseDatos.getEntrenamiento(e.getIdEntrenamiento());
-                    if(temporadaImprimir.getId() != entrenamientoImprimir.getIdTemporada()){
-                        temporadaImprimir = GestorBaseDatos.getTemporada(entrenamientoImprimir.getIdTemporada());
-                        textA.append( "\n  " + temporadaImprimir + "\n");   
-                    }
-                    textA.append("\n    " + entrenamientoImprimir + "\n");
-                }
-            }
-
-            textA.append("      " + e.toString() + e.resumenSeries() +"\n");
-        }
-    }       
-    
-    private void crearPanelEdicion(){
-        
-        panelEdicion = new JSplitPane();
         panelTemporadaEntrenamiento = new JSplitPane();
         panelEjercicioSerie = new JSplitPane();
                 
@@ -515,7 +248,8 @@ public class InterfazUsuario extends JFrame implements MouseListener{
         btnGuardarTemporada.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                actualizarTemporada();
+                if(JOptionPane.showConfirmDialog(null, "¿Está segur@ de que desea guardar los cambios?", "", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION )
+                    actualizarTemporada();
             }
         });
         btnAnnadirTemporada.addActionListener(new ActionListener(){
@@ -527,7 +261,8 @@ public class InterfazUsuario extends JFrame implements MouseListener{
         btnGuardarEntrenamiento.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                actualizarEntrenamiento();
+                if(JOptionPane.showConfirmDialog(null, "¿Está segur@ de que desea guardar los cambios?", "", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION )
+                    actualizarEntrenamiento();
             }
         });
         btnAnnadirEntrenamiento.addActionListener(new ActionListener(){
@@ -539,7 +274,8 @@ public class InterfazUsuario extends JFrame implements MouseListener{
         btnGuardarEjercicio.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                actualizarEjercicio();
+                if(JOptionPane.showConfirmDialog(null, "¿Está segur@ de que desea guardar los cambios?", "", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION )
+                    actualizarEjercicio();
             }
         });
         btnAnnadirEjercicio.addActionListener(new ActionListener(){
@@ -551,7 +287,8 @@ public class InterfazUsuario extends JFrame implements MouseListener{
         btnGuardarSerie.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                actualizarSerie();
+                if(JOptionPane.showConfirmDialog(null, "¿Está segur@ de que desea guardar los cambios?", "", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION )
+                    actualizarSerie();
             }
         });
         btnAnnadirSerie.addActionListener(new ActionListener(){
@@ -803,29 +540,33 @@ public class InterfazUsuario extends JFrame implements MouseListener{
         );
         
         //Estableciendo todos los SplitPane de la pantalla
-        panelEdicion.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
-        panelEdicion.setRightComponent(panelEjercicioSerie);
-        panelEdicion.setLeftComponent(panelTemporadaEntrenamiento);
-        panelEdicion.setDividerLocation(400);
+        setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+        setRightComponent(panelEjercicioSerie);
+        setLeftComponent(panelTemporadaEntrenamiento);
+        setDividerLocation(400);
         
         panelTemporadaEntrenamiento.setOrientation(JSplitPane.VERTICAL_SPLIT);
         panelTemporadaEntrenamiento.setTopComponent(panelTemporada);
         panelTemporadaEntrenamiento.setBottomComponent(panelEntrenamiento);
+        setEnabledPanelTemporada(false);
+
         panelTemporadaEntrenamiento.setDividerLocation(250);
         
         panelEjercicioSerie.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
         panelEjercicioSerie.setRightComponent(panelSerie);
         panelEjercicioSerie.setLeftComponent(panelEjercicio);
         panelEjercicioSerie.setDividerLocation(390);
+        
+        addTemporadas(GestorBaseDatos.getTemporadas());
     }
-
-    /*=========================================================================================
-            Métodos de funcionalidad
-    ===========================================================================================*/
+    
+/*=========================================================================================
+        Métodos de funcionalidad a evento de mouse
+===========================================================================================*/
     
     @Override
     public void mouseClicked(MouseEvent e) {
-        seleccionar((PanelDatos)e.getComponent());
+        seleccionar((Casilla)e.getComponent());
     }
     @Override
     public void mousePressed(MouseEvent e) {}
@@ -833,84 +574,96 @@ public class InterfazUsuario extends JFrame implements MouseListener{
     public void mouseReleased(MouseEvent e) {}
     @Override
     public void mouseEntered(MouseEvent e) {
-        ((PanelDatos)e.getComponent()).activar();
+        ((Casilla)e.getComponent()).activar();
     }
     @Override
     public void mouseExited(MouseEvent e) {
-        ((PanelDatos)e.getComponent()).desactivar();
+        ((Casilla)e.getComponent()).desactivar();
     }
     
+
     //=======================================================
-    public void seleccionar(PanelDatos panelDatosSeleccionado){
-        if(panelDatosSeleccionado instanceof PanelTemporada){
+    private void seleccionar(Casilla panelDatosSeleccionado){
+        if(panelDatosSeleccionado instanceof CasillaTemporada){
             if(temporadaSeleccionada != null){
                 //Cuando se selecciona un registro distinto 
                 if(temporadaSeleccionada != panelDatosSeleccionado){
                     temporadaSeleccionada.seleccionar();//Se deselecciona el registro anterior
-                    temporadaSeleccionada = (PanelTemporada) panelDatosSeleccionado;
+                    temporadaSeleccionada = (CasillaTemporada) panelDatosSeleccionado;
+                    setEnabledPanelEntrenamiento(false);
                 }
                 //Cuando los registros seleccionados son el mismo se desmarcará
                 else{
                     temporadaSeleccionada = null;
+                    setEnabledPanelTemporada(false);
                 }
             }
             //Si temporada seleccionada es null
             else{
-                temporadaSeleccionada = (PanelTemporada) panelDatosSeleccionado;
+                temporadaSeleccionada = (CasillaTemporada) panelDatosSeleccionado;
+                setEnabledPanelTemporada(true);
             }
             recargarCamposTemporada();
         }
-        else if(panelDatosSeleccionado instanceof PanelEntrenamiento){
+        else if(panelDatosSeleccionado instanceof CasillaEntrenamiento){
             if(entrenamientoSeleccionado != null){
                 //Cuando se selecciona un registro distinto 
                 if(entrenamientoSeleccionado  != panelDatosSeleccionado){
                     entrenamientoSeleccionado.seleccionar();//Se deselecciona el registro anterior
-                    entrenamientoSeleccionado = (PanelEntrenamiento) panelDatosSeleccionado;
+                    entrenamientoSeleccionado = (CasillaEntrenamiento) panelDatosSeleccionado;
+                    setEnabledPanelEjercicio(false);
                 }
                 //Cuando los registros seleccionados son el mismo se desmarcará
                 else{
                     entrenamientoSeleccionado = null;
+                    setEnabledPanelEntrenamiento(false);
                 }
             }
             //Si temporada seleccionada es null
             else{
-                entrenamientoSeleccionado = (PanelEntrenamiento) panelDatosSeleccionado;
+                entrenamientoSeleccionado = (CasillaEntrenamiento) panelDatosSeleccionado;
+                setEnabledPanelEntrenamiento(true);
             }
             recargarCamposEntrenamiento(); 
         }
-        else if(panelDatosSeleccionado instanceof PanelEjercicio){
+        else if(panelDatosSeleccionado instanceof CasillaEjercicio){
             if(ejercicioSeleccionado != null){
                 //Cuando se selecciona un registro distinto 
                 if(ejercicioSeleccionado != panelDatosSeleccionado){
                     ejercicioSeleccionado.seleccionar();//Se deselecciona el registro anterior
-                    ejercicioSeleccionado = (PanelEjercicio) panelDatosSeleccionado;
+                    ejercicioSeleccionado = (CasillaEjercicio) panelDatosSeleccionado;
+                    setEnabledPanelSerie(false);
                 }
                 //Cuando los registros seleccionados son el mismo se desmarcará
                 else{
                     ejercicioSeleccionado = null;
+                    setEnabledPanelEjercicio(false);
                 }
             }
             //Si temporada seleccionada es null
             else{
-                ejercicioSeleccionado = (PanelEjercicio) panelDatosSeleccionado;
+                ejercicioSeleccionado = (CasillaEjercicio) panelDatosSeleccionado;
+                setEnabledPanelEjercicio(true);
             }
             recargarCamposEjercicio();
         }
-        else if(panelDatosSeleccionado instanceof PanelSerie){
+        else if(panelDatosSeleccionado instanceof CasillaSerie){
             if(serieSeleccionada != null){
                 //Cuando se selecciona un registro distinto 
                 if(serieSeleccionada != panelDatosSeleccionado){
                     serieSeleccionada.seleccionar();//Se deselecciona el registro anterior
-                    serieSeleccionada = (PanelSerie) panelDatosSeleccionado;
+                    serieSeleccionada = (CasillaSerie) panelDatosSeleccionado;
                 }
                 //Cuando los registros seleccionados son el mismo se desmarcará
                 else{
                     serieSeleccionada = null;
+                    setEnabledPanelSerie(false);
                 }
             }
             //Si temporada seleccionada es null
             else{
-                serieSeleccionada = (PanelSerie) panelDatosSeleccionado;
+                serieSeleccionada = (CasillaSerie) panelDatosSeleccionado;
+                setEnabledPanelSerie(true);
             }
             recargarCamposSerie();
         }
@@ -924,60 +677,74 @@ public class InterfazUsuario extends JFrame implements MouseListener{
     
     //=======================================================
     
-    public void eliminarPanelTemporada(JPanel panel){
+    public void eliminarPanelTemporada(Casilla panel){
         panelListaTemporadas.remove(panel);
         panelListaTemporadas.updateUI();
-        clearTemporada();
+        if(temporadaSeleccionada != null && ((CasillaTemporada)panel).getTemporada().getId() == temporadaSeleccionada.getTemporada().getId()){
+            setEnabledPanelTemporada(false);
+            clearTemporada();
+        }
     }
     
-    public void eliminarPanelEntrenamiento(JPanel panel){
+    public void eliminarPanelEntrenamiento(Casilla panel){
         panelListaEntrenamientos.remove(panel);
         panelListaEntrenamientos.updateUI();
-        clearEntrenamiento();
+        if(entrenamientoSeleccionado != null && ((CasillaEntrenamiento)panel).getEntrenamiento().getId() == entrenamientoSeleccionado.getEntrenamiento().getId()){
+            setEnabledPanelEntrenamiento(false);
+            clearEntrenamiento();
+        }
     }
     
-    public void eliminarPanelEjercicio(JPanel panel){
+    public void eliminarPanelEjercicio(Casilla panel){
         panelListaEjercicios.remove(panel);
         panelListaEjercicios.updateUI();
-        clearEjercicio();
+        if(ejercicioSeleccionado != null && ((CasillaEjercicio)panel).getEjercicio().getId() == ejercicioSeleccionado.getEjercicio().getId()){
+            setEnabledPanelEjercicio(false);
+            clearEjercicio();
+        }
     }
     
-    public void eliminarPanelSerie(JPanel panel){
+    public void eliminarPanelSerie(Casilla panel){
         panelListaSeries.remove(panel);
         panelListaSeries.updateUI();
-        clearSerie();
+        System.out.println("________________deberia hacer clear");
+        if(serieSeleccionada != null && ((CasillaSerie)panel).getSerie().getNumSerie()== serieSeleccionada.getSerie().getNumSerie()){
+            System.out.println("_______________debe hacer si o si clear");
+            setEnabledPanelSerie(false);
+            clearSerie();
+        }
     }
     
     //======================================================
     
-    public void annadirTemporadas(ArrayList <Temporada> temporadas){
+    public void addTemporadas(ArrayList <Temporada> temporadas){
         panelListaTemporadas.removeAll();
         for(Temporada t : temporadas){
-            panelListaTemporadas.add(new PanelTemporada(t,this,this));
+            panelListaTemporadas.add(new CasillaTemporada(t,this,this));
         }
         panelListaTemporadas.updateUI();
     }
     
-    public void annadirEntrenamientos(ArrayList <Entrenamiento> entrenamientos){   
+    public void addEntrenamientos(ArrayList <Entrenamiento> entrenamientos){   
         panelListaEntrenamientos.removeAll();
         for(Entrenamiento ent : entrenamientos){
-            panelListaEntrenamientos.add(new PanelEntrenamiento(ent,this,this));
+            panelListaEntrenamientos.add(new CasillaEntrenamiento(ent,this,this));
         }
         panelListaEntrenamientos.updateUI();
     }
     
-    public void annadirEjercicios(ArrayList <Ejercicio> ejercicios){
+    public void addEjercicios(ArrayList <Ejercicio> ejercicios){
         panelListaEjercicios.removeAll();
         for(Ejercicio ej: ejercicios){
-            panelListaEjercicios.add(new PanelEjercicio(ej,this,this));
+            panelListaEjercicios.add(new CasillaEjercicio(ej,this,this));
         }
         panelListaEjercicios.updateUI();
     }
     
-    public void annadirSeries(ArrayList <Serie> series){
+    public void addSeries(ArrayList <Serie> series){
         panelListaSeries.removeAll();
         for(Serie s : series){
-            panelListaSeries.add(new PanelSerie(s,this,this));
+            panelListaSeries.add(new CasillaSerie(s,this,this));
         }
         panelListaSeries.updateUI();
     }
@@ -1008,8 +775,7 @@ public class InterfazUsuario extends JFrame implements MouseListener{
         panelListaSeries.updateUI();
         serieSeleccionada = null;
         clearSerie();
-    }
-    
+    }  
     private void clearSerie(){
         txtPeso.setText("");
         txtRepeticiones.setText("");
@@ -1023,9 +789,8 @@ public class InterfazUsuario extends JFrame implements MouseListener{
         temporada.setFechaInicio((Date)Date.valueOf(LocalDate.now()));
         temporada.setDescripcion("Sin nombrar");
         GestorBaseDatos.nuevaTemporada(temporada);
-        reselecionarTemporada(temporada);
-    }
-    
+        recargarTemporadas(temporada,false);
+    }  
     private void nuevoEntrenamiento(){
         if(temporadaSeleccionada != null){
             Entrenamiento entrenamiento = new Entrenamiento();
@@ -1042,32 +807,30 @@ public class InterfazUsuario extends JFrame implements MouseListener{
             entrenamiento.setIdTemporada(temporadaSeleccionada.getTemporada().getId());
 
             GestorBaseDatos.nuevoEntrenamiento(entrenamiento);
-            reseleccionarEntrenamiento(entrenamiento);
+            recargarEntrenamientos(entrenamiento,false);
         }else{
             JOptionPane.showMessageDialog(new JPanel(), "No hay ninguna temporada seleccionada", "", JOptionPane.INFORMATION_MESSAGE);
         }
     }
-    
     private void nuevoEjercicio(){
         if(entrenamientoSeleccionado != null){
             Ejercicio ejercicio = new Ejercicio();
             ejercicio.setIdEntrenamiento(entrenamientoSeleccionado.getEntrenamiento().getId());
 
             GestorBaseDatos.nuevoEjercicio(ejercicio);
-            seleccionar(new PanelEjercicio(ejercicio,this,this));
+            seleccionar(new CasillaEjercicio(ejercicio,this,this));
             panelListaEjercicios.add(ejercicioSeleccionado);
             panelListaEjercicios.updateUI();
         }else{
             JOptionPane.showMessageDialog(new JPanel(), "No hay ningún entrenamiento seleccionado", "", JOptionPane.INFORMATION_MESSAGE);
         }
-    }
-        
+    }     
     private void nuevaSerie(){
         if(ejercicioSeleccionado != null){
             Serie serie = new Serie();
             serie.setIdEjercicio(ejercicioSeleccionado.getEjercicio().getId());
             GestorBaseDatos.nuevaSerie(serie);
-            seleccionar(new PanelSerie(serie,this,this));
+            seleccionar(new CasillaSerie(serie,this,this));
             panelListaSeries.add(serieSeleccionada);
             panelListaSeries.updateUI();
         }else{
@@ -1085,27 +848,29 @@ public class InterfazUsuario extends JFrame implements MouseListener{
             serie.setIdEjercicio(ejercicioSeleccionado.getEjercicio().getId());
 
             GestorBaseDatos.nuevaSerie(serie);
-            seleccionar(new PanelSerie(serie,this,this));
+            seleccionar(new CasillaSerie(serie,this,this));
             panelListaSeries.add(serieSeleccionada);
             panelListaSeries.updateUI();
         }else{
             JOptionPane.showMessageDialog(new JPanel(), "No hay ningún ejercicio o serie seleccionada", "", JOptionPane.INFORMATION_MESSAGE);
         }        
-    }
-    
+    }  
     private void actualizarTemporada(){
-        Temporada temporada = temporadaSeleccionada.getTemporada();
         try{
-            temporada.setFechaInicio(Date.valueOf(txtFechaInicio.getText()));
-        }
-        catch(java.lang.IllegalArgumentException iae){
-            JOptionPane.showMessageDialog(this, "La fecha introducida es erronea", "Fecha erronea",JOptionPane.WARNING_MESSAGE );
-        }
-        temporada.setDescripcion(txtDescripcionTemporada.getText());
-        GestorBaseDatos.actualizarTemporada(temporada);
-        reselecionarTemporada(temporada); 
-    }
-    
+            Temporada temporada = temporadaSeleccionada.getTemporada();
+            try{
+                temporada.setFechaInicio(Date.valueOf(txtFechaInicio.getText()));
+            }
+            catch(java.lang.IllegalArgumentException iae){
+                JOptionPane.showMessageDialog(this, "La fecha introducida es erronea", "Fecha erronea",JOptionPane.WARNING_MESSAGE );
+            }
+            temporada.setDescripcion(txtDescripcionTemporada.getText());
+            GestorBaseDatos.actualizarTemporada(temporada);
+            recargarTemporadas(temporada,true);
+        }catch(NullPointerException e){
+            JOptionPane.showMessageDialog(new JPanel(), "No hay ningún elemento seleccionado", "", JOptionPane.INFORMATION_MESSAGE);
+        }  
+    }  
     private void actualizarEntrenamiento(){
         try{
             Entrenamiento entrenamiento = entrenamientoSeleccionado.getEntrenamiento();
@@ -1118,7 +883,7 @@ public class InterfazUsuario extends JFrame implements MouseListener{
             }
             entrenamiento.setDescripcion(txtDescripcionEntrenamiento.getText());
             GestorBaseDatos.actualizarEntrenamiento(entrenamiento);
-            reseleccionarEntrenamiento(entrenamiento);
+            recargarEntrenamientos(entrenamiento,true);
         }catch(NullPointerException e){
             JOptionPane.showMessageDialog(new JPanel(), "No hay ningún elemento seleccionado", "", JOptionPane.INFORMATION_MESSAGE);
         }  
@@ -1155,35 +920,57 @@ public class InterfazUsuario extends JFrame implements MouseListener{
         } 
     }
     
-    //Metodos de actualización para registros que contienen fecha y su orden depende de ella
+    //Métodos de actualización para registros que contienen fecha y su orden depende de ella
     
-    private void reselecionarTemporada(Temporada temporada){
-        annadirTemporadas(GestorBaseDatos.getTemporadas());
-        PanelTemporada panelTemporada = null;
+    //recarga la lista de temporadas y reselecciona la que ya estaba seleccionada en caso de que hubiera
+    private void recargarTemporadas(Temporada temporada, boolean isUpdate){
+        addTemporadas(GestorBaseDatos.getTemporadas());
+        CasillaTemporada panelTemporada = null;//Casilla que será seleccionada en la nueva lista
+        
         //Para seleccionar el nuevo panel habrá que buscarlo en la lista de paneles de temporada
         for(Component c : panelListaTemporadas.getComponents()){
-            if(c instanceof PanelTemporada){
-                if(((PanelTemporada)c).getTemporada().getId() == temporada.getId())
-                panelTemporada = (PanelTemporada)c;
+            if(c instanceof CasillaTemporada){
+                //cuando la temporada de la lista coincida con la temporada anteriormente seleccionada
+                if(((CasillaTemporada)c).getTemporada().getId() == temporada.getId())
+                panelTemporada = (CasillaTemporada)c;
             }
         }
-        temporadaSeleccionada = null;
-        seleccionar(panelTemporada);
+        //Si la recarga ha sido debido a una actualización no se reseleccionada nada, salvo la propia casilla
+        if(isUpdate){
+            temporadaSeleccionada = panelTemporada;
+            temporadaSeleccionada.seleccionar();
+        }
+        //Si es nuevo, será seleccionado
+        else{
+            temporadaSeleccionada = null;
+            seleccionar(panelTemporada);
+        }
         panelListaTemporadas.updateUI();
     }
     
-    private void reseleccionarEntrenamiento(Entrenamiento entrenamiento){
-        annadirEntrenamientos(GestorBaseDatos.getEntrenamientos(entrenamiento.getIdTemporada()));
-        PanelEntrenamiento panelEntrenamiento = null;
+    private void recargarEntrenamientos(Entrenamiento entrenamiento, boolean isUpdate){
+        addEntrenamientos(GestorBaseDatos.getEntrenamientos(entrenamiento.getIdTemporada()));
+        CasillaEntrenamiento panelEntrenamiento = null; //Casilla que será seleccionada en la nueva lista
+        
         //Para seleccionar el nuevo panel habrá que buscarlo en la lista de paneles de entrenamientos
         for(Component c : panelListaEntrenamientos.getComponents()){
-            if(c instanceof PanelEntrenamiento){
-                if(((PanelEntrenamiento)c).getEntrenamiento().getId() == entrenamiento.getId())
-                panelEntrenamiento = (PanelEntrenamiento)c;
+            if(c instanceof CasillaEntrenamiento){
+                //cuando el entrenamientode la lista coincida con el entrenamiento anteriormente seleccionado
+                if(((CasillaEntrenamiento)c).getEntrenamiento().getId() == entrenamiento.getId())
+                panelEntrenamiento = (CasillaEntrenamiento)c;
             }
         }
-        entrenamientoSeleccionado = null;
-        seleccionar(panelEntrenamiento);
+        //Si ha sido debido a una actualización no se reseleccionada nada, salvo la propia casilla
+        if(isUpdate){
+            entrenamientoSeleccionado = panelEntrenamiento;
+            entrenamientoSeleccionado.seleccionar();
+        }
+        //Si es nuevo, será seleccionado
+        else{
+            entrenamientoSeleccionado = null;
+            seleccionar(panelEntrenamiento);
+        }
+
         panelListaEntrenamientos.updateUI();
     }
     
@@ -1215,7 +1002,7 @@ public class InterfazUsuario extends JFrame implements MouseListener{
                 }
             }
         }
-    }
+    } 
     private void recargarCamposEjercicio(){
         clearEjercicio();
         if(ejercicioSeleccionado != null){
@@ -1244,6 +1031,99 @@ public class InterfazUsuario extends JFrame implements MouseListener{
                     txtExtra.setText(serie.getExtra());
                 }
             }
+        }
+    }
+    
+    private void setEnabledPanelTemporada(boolean b ){
+        
+        btnAnnadirEntrenamiento.setEnabled(b);
+        btnGuardarTemporada.setEnabled(b);
+        txtFechaInicio.setEnabled(b);
+        txtDescripcionTemporada.setEnabled(b);
+        
+        if(b){
+            panelEntrenamiento.setBackground(new Color(180, 160, 255));
+            scrollEntrenamientos.setBackground(new Color(100, 80, 180));
+            panelListaEntrenamientos.setBackground(Color.WHITE);
+            txtFechaInicio.setBackground(Color.WHITE);
+            txtDescripcionTemporada.setBackground(Color.WHITE);
+        }else{
+            panelEntrenamiento.setBackground(new Color(100, 80, 180));
+            scrollEntrenamientos.setBackground(new Color(20, 0, 105));
+            panelListaEntrenamientos.setBackground(Color.GRAY);
+            txtFechaInicio.setBackground(Color.GRAY);
+            txtDescripcionTemporada.setBackground(Color.GRAY);
+            setEnabledPanelEntrenamiento(b );
+        }
+    }
+    
+    private void setEnabledPanelEntrenamiento(boolean b ){
+        
+        btnAnnadirEjercicio.setEnabled(b);
+        btnGuardarEntrenamiento.setEnabled(b);
+        txtFecha.setEnabled(b);
+        txtPesoCorporal.setEnabled(b);
+        txtDescripcionEntrenamiento.setEnabled(b);
+        
+        if(b){
+            panelEjercicio.setBackground(new Color(180, 160, 255));
+            scrollEjercicios.setBackground(new Color(100, 80, 180));
+            panelListaEjercicios.setBackground(Color.WHITE);
+            txtFecha.setBackground(Color.WHITE);
+            txtPesoCorporal.setBackground(Color.WHITE);
+            txtDescripcionEntrenamiento.setBackground(Color.WHITE);
+        }else{
+            panelEjercicio.setBackground(new Color(100, 80, 180));
+            scrollEjercicios.setBackground(new Color(20, 0, 105));
+            panelListaEjercicios.setBackground(Color.GRAY);
+            txtFecha.setBackground(Color.GRAY);
+            txtPesoCorporal.setBackground(Color.GRAY);
+            txtDescripcionEntrenamiento.setBackground(Color.GRAY);
+            setEnabledPanelEjercicio(b );
+        }
+    }
+    
+    private void setEnabledPanelEjercicio(boolean b ){
+        
+        btnAnnadirSerie.setEnabled(b);
+        btnGuardarEjercicio.setEnabled(b);
+        txtNombre.setEnabled(b);
+        txtVariante.setEnabled(b);
+        txtDescripcionEjercicio.setEnabled(b);
+
+        if(b){
+            panelSerie.setBackground(new Color(180, 160, 255));
+            scrollSeries.setBackground(new Color(100, 80, 180));
+            panelListaSeries.setBackground(Color.WHITE);
+            txtNombre.setBackground(Color.WHITE);
+            txtVariante.setBackground(Color.WHITE);
+            txtDescripcionEjercicio.setBackground(Color.WHITE);
+        }else{
+            panelSerie.setBackground(new Color(100, 80, 180));
+            scrollSeries.setBackground(new Color(20, 0, 105));
+            panelListaSeries.setBackground(Color.GRAY);
+            txtNombre.setBackground(Color.GRAY);
+            txtVariante.setBackground(Color.GRAY);
+            txtDescripcionEjercicio.setBackground(Color.GRAY);
+            setEnabledPanelSerie(b);
+        }
+    }
+    
+        private void setEnabledPanelSerie(boolean b ){
+        
+        btnclonarSerie.setEnabled(b);
+        btnGuardarSerie.setEnabled(b);
+        txtPeso.setEnabled(b);
+        txtRepeticiones.setEnabled(b);
+        txtExtra.setEnabled(b);
+        if(b){
+            txtPeso.setBackground(Color.WHITE);
+            txtRepeticiones.setBackground(Color.WHITE);
+            txtExtra.setBackground(Color.WHITE);
+        }else{
+            txtPeso.setBackground(Color.GRAY);
+            txtRepeticiones.setBackground(Color.GRAY);
+            txtExtra.setBackground(Color.GRAY);
         }
     }
 }

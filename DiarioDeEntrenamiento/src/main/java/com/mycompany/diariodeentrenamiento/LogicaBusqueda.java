@@ -1,8 +1,10 @@
-
 package com.mycompany.diariodeentrenamiento;
 
-
+import POJOs.Ejercicio;
+import POJOs.Entrenamiento;
+import POJOs.Temporada;
 import java.sql.Date;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -10,7 +12,7 @@ import javax.swing.JPanel;
  *
  * @author victo
  */
-public class Filtro {
+public class LogicaBusqueda {
     private String fechaMinima;
     private String fechaMaxima;
     private String ejercicio;
@@ -20,7 +22,7 @@ public class Filtro {
     private String pesoMinimo;
     private String pesoMaximo;
     
-    public Filtro(){
+    public LogicaBusqueda(){
         fechaMinima = null;
         fechaMaxima = null;
         ejercicio = null;
@@ -103,7 +105,7 @@ public class Filtro {
         }
     }
     
-    public String crearQuery(){
+    private String crearQuery(){
           
         String tablas = " Temporada t , Entrenamiento ent , Ejercicio ej , Serie s";
         String columnas = " select ej from ";
@@ -141,6 +143,37 @@ public class Filtro {
         
         //Returna la query agrupandola por ejercicio y ordenando por fecha
         return columnas + tablas + condicion + "group by ej.id order by ent.fecha";
+    }
+    
+    public String buscar(){
+        StringBuilder text = new StringBuilder("");
+        ArrayList<Ejercicio> ejercicios = GestorBaseDatos.getConsulta(crearQuery());
+        Entrenamiento entrenamientoImprimir = null;
+        Temporada temporadaImprimir = null;
+        boolean primerVez = true;
+
+        for(Ejercicio e : ejercicios){
+            if(primerVez){
+                entrenamientoImprimir = GestorBaseDatos.getEntrenamiento(e.getIdEntrenamiento());
+                temporadaImprimir = GestorBaseDatos.getTemporada(entrenamientoImprimir.getIdTemporada());
+                text.append( "  " + temporadaImprimir + "\n");
+                text.append("\n    *" + entrenamientoImprimir + "\n");
+                primerVez = false;
+            }
+            else{
+
+                if(entrenamientoImprimir.getId() != e.getIdEntrenamiento()){
+                    entrenamientoImprimir = GestorBaseDatos.getEntrenamiento(e.getIdEntrenamiento());
+                    if(temporadaImprimir.getId() != entrenamientoImprimir.getIdTemporada()){
+                        temporadaImprimir = GestorBaseDatos.getTemporada(entrenamientoImprimir.getIdTemporada());
+                        text.append( "\n  " + temporadaImprimir + "\n");   
+                    }
+                    text.append("\n    *" + entrenamientoImprimir + "\n");
+                }
+            }
+            text.append("       -" + e.toString() + e.resumenSeries() +"\n");
+        }
+        return text.toString();
     }
 
 }

@@ -4,7 +4,6 @@ import POJOs.Ejercicio;
 import POJOs.Entrenamiento;
 import POJOs.Serie;
 import POJOs.Temporada;
-import java.io.File;
 import java.util.ArrayList;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -21,26 +20,9 @@ public class GestorBaseDatos {
         
     }
     
-    public static void introPrueba() {
-		
-        Session sesion = GestorBaseDatos.getCurrentSessionFromConfig();
-        Transaction tran = sesion.beginTransaction();
-        Temporada temporada = new Temporada (new java.sql.Date(2000,2,14),new java.sql.Date(2069,2,14) , "alguien ha envenenido el abrevadero");
-        sesion.save(temporada);
-        tran.commit();
-        sesion.close();
-
-	}
-	
-    public static Session getCurrentSessionFromConfig() {
-        SessionFactory sessionFactory  = new Configuration().configure().buildSessionFactory();
-        Session session = sessionFactory.openSession();
-        sessionFactory.close();
-        return session;
-      }
-    
     private static Session iniciarSession(){
         SessionFactory sessionFactory  = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
+        //sessionFactory.close();
         return sessionFactory.openSession();
     }
     
@@ -76,15 +58,6 @@ public class GestorBaseDatos {
         session.save(serie);
         tran.commit();
         session.close();
-    }
-    
-        public static void annadirSerie(Serie serie){
-        Session session = iniciarSession();
-        Transaction tran = session.beginTransaction();
-        session.save(serie);
-        tran.commit();
-        session.close();
-        //sessionFactory.close();
     }
     
     public static void actualizarTemporada(Temporada temporada){
@@ -190,6 +163,17 @@ public class GestorBaseDatos {
         return ejercicios;
     }
     
+    public static ArrayList<Ejercicio> getEjercicios(String ejercicio){
+        Session session = iniciarSession();
+        Transaction tran = session.beginTransaction();
+        String s = (ejercicio.equals("Todos"))? "":" where nombre like '" + ejercicio + "'";
+        ArrayList<Ejercicio> listaEjercicios = null;
+        listaEjercicios= (ArrayList<Ejercicio>)session.createQuery(" from Ejercicio" + s +" order by idEntrenamiento").list();
+        tran.commit();
+        session.close();
+        return listaEjercicios;
+    }
+    
     public static ArrayList<Serie> getSeries(int idEjercicio){
         Session session = iniciarSession();
         Transaction tran = session.beginTransaction();
@@ -201,7 +185,7 @@ public class GestorBaseDatos {
         return series;
     }   
     
-    public static ArrayList<String> getListaEjercicios(){
+    public static ArrayList<String> getNombreEjercicios(){
         Session session = iniciarSession();
         Transaction tran = session.beginTransaction();
         ArrayList<String> listaEjercicios = (ArrayList<String>)session.createQuery("select distinct nombre from Ejercicio" ).list();
@@ -211,7 +195,7 @@ public class GestorBaseDatos {
         return listaEjercicios;
     }
     
-    public static ArrayList<String> getListaTemporadas(){
+    public static ArrayList<String> getNombreTemporadas(){
         Session session = iniciarSession();
         Transaction tran = session.beginTransaction();
         ArrayList<String> listaTemporadas = (ArrayList<String>)session.createQuery("select distinct descripcion from Temporada" ).list();
@@ -219,17 +203,6 @@ public class GestorBaseDatos {
         session.close();
         //sessionFactory.close();
         return listaTemporadas;
-    }
-    
-    public static  ArrayList<Ejercicio> getEjercicios(String ejercicio){
-        Session session = iniciarSession();
-        Transaction tran = session.beginTransaction();
-        String s = (ejercicio.equals("Todos"))? "":" where nombre like '" + ejercicio + "'";
-        ArrayList<Ejercicio> listaEjercicios = null;
-        listaEjercicios= (ArrayList<Ejercicio>)session.createQuery(" from Ejercicio" + s +" order by idEntrenamiento").list();
-        tran.commit();
-        session.close();
-        return listaEjercicios;
     }
     
     public static ArrayList<Ejercicio> getConsulta(String query ){

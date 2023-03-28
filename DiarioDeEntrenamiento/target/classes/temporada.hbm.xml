@@ -14,8 +14,8 @@
          <generator class="native"/>
       </id>
       
-      <property name = "fechaInicio" column = "inicio" type = "date"/>
-      <property name = "fechaFin" column = "fin" type = "date"/>
+      <property name = "fechaInicio" column = "fecha_inicio" type = "date"/>
+      <property name = "fechaFin" column = "fecha_fin" type = "date"/>
       <property name = "descripcion" column = "descripcion" type = "string"/>
       
    </class>

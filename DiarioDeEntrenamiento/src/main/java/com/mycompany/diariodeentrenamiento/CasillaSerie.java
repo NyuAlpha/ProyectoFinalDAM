@@ -9,9 +9,9 @@ import java.util.ArrayList;
  *
  * @author victo
  */
-public class PanelSerie extends PanelDatos{
+public class CasillaSerie extends Casilla{
    
-    public PanelSerie(Serie serie,MouseListener listener,InterfazUsuario interfaz){
+    public CasillaSerie(Serie serie,MouseListener listener,PanelEdicion interfaz){
         
         super(listener,interfaz,serie);      
         generarTexto();
@@ -19,8 +19,8 @@ public class PanelSerie extends PanelDatos{
     
     public void eliminar(){
 
-        GestorBaseDatos.eliminarSerie((Serie)entidad);
-        interfaz.annadirSeries(GestorBaseDatos.getSeries(((Serie)entidad).getIdEjercicio()));
+        GestorBaseDatos.eliminarSerie((Serie)registro);
+        interfaz.addSeries(GestorBaseDatos.getSeries(((Serie)registro).getIdEjercicio()));
     }
 
     @Override
@@ -28,6 +28,6 @@ public class PanelSerie extends PanelDatos{
     }
 
     public Serie getSerie() {
-        return (Serie)entidad;
+        return (Serie)registro;
     }  
 }
