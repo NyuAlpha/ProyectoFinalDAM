@@ -88,6 +88,9 @@ public class PanelBusqueda extends JPanel {
         
         textA.setFont(new Font(Font.DIALOG,Font.BOLD,12));
         textB.setFont(new Font(Font.DIALOG,Font.BOLD,12));
+        
+        textA.setEditable(false);
+        textB.setEditable(false);
                 
         actualizarComboBoxEjercicio();
         actualizarComboBoxEjercicio();

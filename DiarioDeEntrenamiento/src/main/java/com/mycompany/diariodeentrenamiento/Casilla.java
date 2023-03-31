@@ -37,8 +37,7 @@ public abstract class Casilla extends JPanel{
         
         this.addMouseListener(listener);
         btnEliminar = new JButton(new ImageIcon(".\\src\\main\\java\\iconos\\delete.png"));
-        //Image im = ((ImageIcon)btnEliminar.getIcon()).getImage();
-        //((ImageIcon)btnEliminar.getIcon()).setImage(im.getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+
         btnEliminar.setBorder(BorderFactory.createEtchedBorder());
         btnEliminar.setToolTipText("Eliminar");
         
@@ -61,6 +60,7 @@ public abstract class Casilla extends JPanel{
     
     public abstract void eliminar();
     public abstract void generarLista();
+    public abstract void clicar();
     
     public void activar(){
         if(!seleccionado){
@@ -79,19 +79,25 @@ public abstract class Casilla extends JPanel{
     }
     
     public void seleccionar(){
-        
-        if(!seleccionado){
-            seleccionado = true;
-            this.setBackground(new Color(160,160,170));
-            texto.setForeground(Color.BLUE);
-        }
-        else{
-            seleccionado = false;
-            this.setBackground(new Color(214,214,224));
-            texto.setForeground(Color.BLACK);
-            setBorder(BorderFactory.createEtchedBorder());
-        }
+        seleccionado = true;
+        this.setBackground(new Color(160,160,170));
+        texto.setForeground(Color.BLUE);
     }
+    
+    public void deseleccionar(){
+        seleccionado = false;
+        this.setBackground(new Color(214,214,224));
+        texto.setForeground(Color.BLACK);
+        setBorder(BorderFactory.createEtchedBorder());
+    }
+    
+    public void reseleccionar(){
+
+        seleccionado = true;
+        this.setBackground(new Color(160,160,170));
+        texto.setForeground(Color.BLUE);
+    }
+    
     
     protected void generarTexto(){
         String txt = registro.toString();

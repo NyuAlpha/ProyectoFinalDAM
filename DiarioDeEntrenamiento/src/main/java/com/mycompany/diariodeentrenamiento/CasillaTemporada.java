@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.diariodeentrenamiento;
 
 import POJOs.Temporada;
@@ -31,6 +27,12 @@ public class CasillaTemporada extends Casilla {
     public Temporada getTemporada() {
         return (Temporada)registro;
     }
-
     
+    public boolean equals (Temporada t){
+        return ((Temporada)registro).getId() == t.getId();
+    }
+
+    public void clicar(){
+        interfaz.seleccionarTemporada(this);
+    }
 }

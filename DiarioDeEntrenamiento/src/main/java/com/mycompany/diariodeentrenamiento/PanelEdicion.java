@@ -101,6 +101,8 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
     private JLabel lblEntrenamientoInfo;
     private JLabel lblEjercicioInfo;
     private JLabel lblSerieInfo;
+    
+    private JLabel lblVacio;
 /*=======================================================================
     Botones
 =========================================================================*/    
@@ -165,6 +167,13 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
         lblPeso = new JLabel ("Peso(kg)");
         lblRepeticiones = new JLabel ("Repeticiones");
         lblExtra = new JLabel ("Extra");
+        
+        //Este label es para avisar de que un lista de un jpanel está vacia.
+        lblVacio = new JLabel("Sin elementos");
+        lblVacio.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+        lblVacio.setBorder(new EmptyBorder(50,0,50,0));
+        lblVacio.setFont(new Font(Font.DIALOG,Font.BOLD,20));
+        lblVacio.setForeground(Color.LIGHT_GRAY);
         
         
         txtFechaInicio = new JTextField();
@@ -566,7 +575,7 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
     
     @Override
     public void mouseClicked(MouseEvent e) {
-        seleccionar((Casilla)e.getComponent());
+        ((Casilla)e.getComponent()).clicar();
     }
     @Override
     public void mousePressed(MouseEvent e) {}
@@ -581,138 +590,226 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
         ((Casilla)e.getComponent()).desactivar();
     }
     
-
-    //=======================================================
-    private void seleccionar(Casilla panelDatosSeleccionado){
-        if(panelDatosSeleccionado instanceof CasillaTemporada){
-            if(temporadaSeleccionada != null){
-                //Cuando se selecciona un registro distinto 
-                if(temporadaSeleccionada != panelDatosSeleccionado){
-                    temporadaSeleccionada.seleccionar();//Se deselecciona el registro anterior
-                    temporadaSeleccionada = (CasillaTemporada) panelDatosSeleccionado;
-                    setEnabledPanelEntrenamiento(false);
-                }
-                //Cuando los registros seleccionados son el mismo se desmarcará
-                else{
-                    temporadaSeleccionada = null;
-                    setEnabledPanelTemporada(false);
-                }
+    public void seleccionarTemporada(CasillaTemporada casillaTemporada){
+        
+        //Si ya estaba seleccionada se deselecciona y se anula la temporada seleccionada , se desactivan los subcontenedores
+        if(temporadaSeleccionada != null && temporadaSeleccionada.equals(casillaTemporada.getTemporada())){
+            if(casillaTemporada.isSeleccionado()){
+                temporadaSeleccionada.deseleccionar();
+                temporadaSeleccionada = null;
+                setEnabledPanelTemporada(false);
+                clearTemporada();
             }
-            //Si temporada seleccionada es null
             else{
-                temporadaSeleccionada = (CasillaTemporada) panelDatosSeleccionado;
-                setEnabledPanelTemporada(true);
+                //reselección fantasma. Solo se activará en caso de actualización de la lista
+                temporadaSeleccionada = casillaTemporada;
+                temporadaSeleccionada.seleccionar();
             }
-            recargarCamposTemporada();
         }
-        else if(panelDatosSeleccionado instanceof CasillaEntrenamiento){
-            if(entrenamientoSeleccionado != null){
-                //Cuando se selecciona un registro distinto 
-                if(entrenamientoSeleccionado  != panelDatosSeleccionado){
-                    entrenamientoSeleccionado.seleccionar();//Se deselecciona el registro anterior
-                    entrenamientoSeleccionado = (CasillaEntrenamiento) panelDatosSeleccionado;
-                    setEnabledPanelEjercicio(false);
-                }
-                //Cuando los registros seleccionados son el mismo se desmarcará
-                else{
-                    entrenamientoSeleccionado = null;
-                    setEnabledPanelEntrenamiento(false);
-                }
-            }
-            //Si temporada seleccionada es null
-            else{
-                entrenamientoSeleccionado = (CasillaEntrenamiento) panelDatosSeleccionado;
-                setEnabledPanelEntrenamiento(true);
-            }
-            recargarCamposEntrenamiento(); 
-        }
-        else if(panelDatosSeleccionado instanceof CasillaEjercicio){
-            if(ejercicioSeleccionado != null){
-                //Cuando se selecciona un registro distinto 
-                if(ejercicioSeleccionado != panelDatosSeleccionado){
-                    ejercicioSeleccionado.seleccionar();//Se deselecciona el registro anterior
-                    ejercicioSeleccionado = (CasillaEjercicio) panelDatosSeleccionado;
-                    setEnabledPanelSerie(false);
-                }
-                //Cuando los registros seleccionados son el mismo se desmarcará
-                else{
-                    ejercicioSeleccionado = null;
-                    setEnabledPanelEjercicio(false);
-                }
-            }
-            //Si temporada seleccionada es null
-            else{
-                ejercicioSeleccionado = (CasillaEjercicio) panelDatosSeleccionado;
-                setEnabledPanelEjercicio(true);
-            }
-            recargarCamposEjercicio();
-        }
-        else if(panelDatosSeleccionado instanceof CasillaSerie){
-            if(serieSeleccionada != null){
-                //Cuando se selecciona un registro distinto 
-                if(serieSeleccionada != panelDatosSeleccionado){
-                    serieSeleccionada.seleccionar();//Se deselecciona el registro anterior
-                    serieSeleccionada = (CasillaSerie) panelDatosSeleccionado;
-                }
-                //Cuando los registros seleccionados son el mismo se desmarcará
-                else{
-                    serieSeleccionada = null;
-                    setEnabledPanelSerie(false);
-                }
-            }
-            //Si temporada seleccionada es null
-            else{
-                serieSeleccionada = (CasillaSerie) panelDatosSeleccionado;
-                setEnabledPanelSerie(true);
-            }
-            recargarCamposSerie();
-        }
-        //Marca el registro seleccionado
-        panelDatosSeleccionado.seleccionar();
-        //Genera la lista de elementos que contenga dicho registro solo si está seleccionado
-        if(panelDatosSeleccionado.isSeleccionado()){
-            panelDatosSeleccionado.generarLista();
-        }
-    }
-    
-    //=======================================================
-    
-    public void eliminarPanelTemporada(Casilla panel){
-        panelListaTemporadas.remove(panel);
-        panelListaTemporadas.updateUI();
-        if(temporadaSeleccionada != null && ((CasillaTemporada)panel).getTemporada().getId() == temporadaSeleccionada.getTemporada().getId()){
-            setEnabledPanelTemporada(false);
+        //Si no había nada seleccionado o no eran la misma le asigna la nueva casilla y activa el componente de temporadas
+        else{
             clearTemporada();
+            if(temporadaSeleccionada != null)
+                temporadaSeleccionada.deseleccionar();//deseleciona la temporada seleccionada antes de asignarle otra
+            
+            temporadaSeleccionada = casillaTemporada;
+            temporadaSeleccionada.seleccionar();
+        
+            Temporada temporada = temporadaSeleccionada.getTemporada();
+            if(temporada.getFechaInicio() != null)
+                txtFechaInicio.setText(temporada.getFechaInicio().toString());  
+            if(temporada.getDescripcion() != null)
+                txtDescripcionTemporada.setText(temporada.getDescripcion());
+            
+            setEnabledPanelTemporada(true);
+            temporadaSeleccionada.generarLista();
         }
     }
     
-    public void eliminarPanelEntrenamiento(Casilla panel){
-        panelListaEntrenamientos.remove(panel);
-        panelListaEntrenamientos.updateUI();
-        if(entrenamientoSeleccionado != null && ((CasillaEntrenamiento)panel).getEntrenamiento().getId() == entrenamientoSeleccionado.getEntrenamiento().getId()){
-            setEnabledPanelEntrenamiento(false);
+    public void seleccionarEntrenamiento(CasillaEntrenamiento casillaEntrenamiento){
+        
+        //Si ya estaba seleccionada se deselecciona y se anula el entrenamiento seleccionado , se desactivan los subcontenedores
+        if(entrenamientoSeleccionado != null && entrenamientoSeleccionado.equals(casillaEntrenamiento.getEntrenamiento())){
+            //deselecciona el panel al volver a intentar selecionarlo
+            if(casillaEntrenamiento.isSeleccionado()){
+                entrenamientoSeleccionado.deseleccionar();
+                entrenamientoSeleccionado = null;
+                setEnabledPanelEntrenamiento(false);
+                clearEntrenamiento();
+            }
+            else{
+                //reselección fantasma. Solo se activará en caso de actualización de la lista
+                entrenamientoSeleccionado = casillaEntrenamiento;
+                entrenamientoSeleccionado.seleccionar();
+            }
+        }
+        //Si no había nada seleccionado o no eran la misma le asigna la nueva casilla y activa el componente de entrenamientos
+        else{
             clearEntrenamiento();
+            if(entrenamientoSeleccionado != null)
+                entrenamientoSeleccionado.deseleccionar();//deseleciona el entrenamiento seleccionado previo
+                
+            entrenamientoSeleccionado = casillaEntrenamiento;
+            entrenamientoSeleccionado.seleccionar();
+        
+            Entrenamiento entrenamiento = entrenamientoSeleccionado.getEntrenamiento();
+            if(entrenamiento.getFecha() != null)
+                txtFecha.setText(entrenamiento.getFecha().toString());
+
+            txtPesoCorporal.setText(Float.toString(entrenamiento.getPesoCorporal()));   
+            if(entrenamiento.getDescripcion() != null)
+                txtDescripcionEntrenamiento.setText(entrenamiento.getDescripcion());
+            
+            setEnabledPanelEntrenamiento(true);
+            entrenamientoSeleccionado.generarLista();
         }
     }
-    
-    public void eliminarPanelEjercicio(Casilla panel){
-        panelListaEjercicios.remove(panel);
-        panelListaEjercicios.updateUI();
-        if(ejercicioSeleccionado != null && ((CasillaEjercicio)panel).getEjercicio().getId() == ejercicioSeleccionado.getEjercicio().getId()){
-            setEnabledPanelEjercicio(false);
+        
+    public void seleccionarEjercicio(CasillaEjercicio casillaEjercicio){
+        
+        //Si ya estaba seleccionada se deselecciona y se anula el ejercicio seleccionado , se desactivan los subcontenedores
+        if(ejercicioSeleccionado != null && ejercicioSeleccionado.equals(casillaEjercicio.getEjercicio())){
+            if(casillaEjercicio.isSeleccionado()){
+                ejercicioSeleccionado.deseleccionar();
+                ejercicioSeleccionado = null;
+                setEnabledPanelEjercicio(false);
+                clearEjercicio();
+            }
+            else{
+                //reselección fantasma. Solo se activará en caso de actualización de la lista
+                ejercicioSeleccionado = casillaEjercicio;
+                ejercicioSeleccionado.seleccionar();
+            }
+        }
+        //Si no había nada seleccionado o no eran la misma le asigna la nueva casilla y activa el componente de ejercicios
+        else{
             clearEjercicio();
+            if(ejercicioSeleccionado != null)
+                ejercicioSeleccionado.deseleccionar();//deseleciona el ejercicio seleccionado previo
+                
+            ejercicioSeleccionado = casillaEjercicio;
+            ejercicioSeleccionado.seleccionar();
+        
+            Ejercicio ejercicio = ejercicioSeleccionado.getEjercicio();
+                if(ejercicio.getNombre() != null)
+                    txtNombre.setText(ejercicio.getNombre());
+
+                if(ejercicio.getVariante() != null)
+                    txtVariante.setText(ejercicio.getVariante()); 
+
+                if(ejercicio.getDescripcion() != null)
+                    txtDescripcionEjercicio.setText(ejercicio.getDescripcion());
+
+            setEnabledPanelEjercicio(true);
+            ejercicioSeleccionado.generarLista();
+        }
+    }
+
+    public void seleccionarSerie(CasillaSerie casillaSerie){
+        
+        //Si ya estaba seleccionada se deselecciona y se anula el serie seleccionada , se desactivan los subcontenedores
+        if(serieSeleccionada != null && serieSeleccionada.equals(casillaSerie.getSerie())){
+            if(casillaSerie.isSeleccionado()){
+                serieSeleccionada.deseleccionar();
+                serieSeleccionada = null;
+                setEnabledPanelSerie(false);
+                clearSerie();
+            }
+            else{
+                //reselección fantasma. Solo se activará en caso de actualización de la lista
+                serieSeleccionada = casillaSerie;
+                serieSeleccionada.seleccionar();
+            }
+        }
+        //Si no había nada seleccionado o no eran la misma le asigna la nueva casilla y activa el componente de series
+        else{
+            clearSerie();
+            if(serieSeleccionada != null)
+                serieSeleccionada.deseleccionar();//deseleciona la serie seleccionado previo
+                
+            serieSeleccionada = casillaSerie;
+            serieSeleccionada.seleccionar();
+        
+            Serie serie = serieSeleccionada.getSerie();
+            txtPeso.setText(Float.toString(serie.getPeso()));
+            txtRepeticiones.setText(Integer.toString(serie.getRepeticiones()));   
+            if(serie.getExtra() != null)
+                txtExtra.setText(serie.getExtra());
+
+            setEnabledPanelSerie(true);
+            serieSeleccionada.generarLista();
         }
     }
     
-    public void eliminarPanelSerie(Casilla panel){
-        panelListaSeries.remove(panel);
-        panelListaSeries.updateUI();
-        System.out.println("________________deberia hacer clear");
-        if(serieSeleccionada != null && ((CasillaSerie)panel).getSerie().getNumSerie()== serieSeleccionada.getSerie().getNumSerie()){
-            System.out.println("_______________debe hacer si o si clear");
-            setEnabledPanelSerie(false);
-            clearSerie();
+    //=======================================================
+    
+    public void eliminarPanelTemporada(CasillaTemporada panelTemporada){
+        //Si no había ningúna temporada previamente seleccionado hace una recarga normal
+        if(temporadaSeleccionada == null)
+            recargarTemporadas(panelTemporada.getTemporada());
+        else{
+            //Si la temporada eliminada estaba seleccionada limpia y bloquea sus campos
+            if((panelTemporada).equals(temporadaSeleccionada)){
+                setEnabledPanelTemporada(false);
+                clearTemporada();
+                temporadaSeleccionada = null;
+                recargarTemporadas(panelTemporada.getTemporada());
+            }
+            //si son distintos reselecciona el que no se ha eliminado
+            else
+                recargarTemporadas(temporadaSeleccionada.getTemporada());
         }
+    }
+    
+    public void eliminarPanelEntrenamiento(CasillaEntrenamiento panelEntrenamiento){
+    
+        //Si no había ningún entrenamiento previamente seleccionado hace una recarga normal
+        if(entrenamientoSeleccionado == null)
+            recargarEntrenamientos(panelEntrenamiento.getEntrenamiento());
+        else{
+            //Si el entrenamiento eliminado estaba seleccionado limpia y bloquea sus campos
+            if((panelEntrenamiento).equals(entrenamientoSeleccionado)){
+                setEnabledPanelEntrenamiento(false);
+                clearEntrenamiento();
+                entrenamientoSeleccionado = null;
+                recargarEntrenamientos(panelEntrenamiento.getEntrenamiento());
+            }
+            //si son distintos reselecciona el que no se ha eliminado
+            else
+                recargarEntrenamientos(entrenamientoSeleccionado.getEntrenamiento());
+        }
+        //Actualiza temporada por si las fechas cambian
+        actualizarTemporada();
+    }
+    
+    public void eliminarPanelEjercicio(CasillaEjercicio panelEjercicio){
+        //Si no había ningún ejercicio previamente seleccionado hace una recarga normal
+        if(ejercicioSeleccionado == null)
+            recargarEjercicios(panelEjercicio.getEjercicio());
+        else{
+            //Si el ejercicio eliminado estaba seleccionado limpia y bloquea sus campos
+            if((panelEjercicio).equals(ejercicioSeleccionado)){
+                setEnabledPanelEjercicio(false);
+                clearEjercicio();
+                ejercicioSeleccionado = null;
+                recargarEjercicios(panelEjercicio.getEjercicio());
+            }
+            //si son distintos reselecciona el que no se ha eliminado
+            else
+                recargarEjercicios(ejercicioSeleccionado.getEjercicio());
+        }
+    }
+    
+    public void eliminarPanelSerie(CasillaSerie casillaEliminada){
+        
+        //Eliminar serie implica una reubicación de las series, por lo que hay que recargar todas las series desde la base de datos
+        panelListaSeries.removeAll();//Se borra la lista previa.
+        clearSerie();
+        //Como las series pueden ser modificadas cuando se elimina alguna no es posible identificar cual estaba seleccionada previamente
+        addSeries(GestorBaseDatos.getSeries(casillaEliminada.getSerie().getIdEjercicio()));
+        setEnabledPanelSerie(false);
+        if(serieSeleccionada.equals(panelSerie))
+            serieSeleccionada = null;
     }
     
     //======================================================
@@ -722,6 +819,9 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
         for(Temporada t : temporadas){
             panelListaTemporadas.add(new CasillaTemporada(t,this,this));
         }
+        if(temporadas.isEmpty()){
+            panelListaTemporadas.add(lblVacio);
+        }
         panelListaTemporadas.updateUI();
     }
     
@@ -729,6 +829,9 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
         panelListaEntrenamientos.removeAll();
         for(Entrenamiento ent : entrenamientos){
             panelListaEntrenamientos.add(new CasillaEntrenamiento(ent,this,this));
+        }
+        if(entrenamientos.isEmpty()){
+            panelListaEntrenamientos.add(lblVacio);
         }
         panelListaEntrenamientos.updateUI();
     }
@@ -738,6 +841,9 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
         for(Ejercicio ej: ejercicios){
             panelListaEjercicios.add(new CasillaEjercicio(ej,this,this));
         }
+        if(ejercicios.isEmpty()){
+            panelListaEjercicios.add(lblVacio);
+        }
         panelListaEjercicios.updateUI();
     }
     
@@ -745,6 +851,9 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
         panelListaSeries.removeAll();
         for(Serie s : series){
             panelListaSeries.add(new CasillaSerie(s,this,this));
+        }
+        if(series.isEmpty()){
+            panelListaSeries.add(lblVacio);
         }
         panelListaSeries.updateUI();
     }
@@ -789,56 +898,50 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
         temporada.setFechaInicio((Date)Date.valueOf(LocalDate.now()));
         temporada.setDescripcion("Sin nombrar");
         GestorBaseDatos.nuevaTemporada(temporada);
-        recargarTemporadas(temporada,false);
+        recargarTemporadas(temporada);
+        
     }  
     private void nuevoEntrenamiento(){
-        if(temporadaSeleccionada != null){
-            Entrenamiento entrenamiento = new Entrenamiento();
-            entrenamiento.setFecha((Date)Date.valueOf(LocalDate.now()));    
-            if( ! txtPesoCorporal.getText().isEmpty()){
-                try{
-                    entrenamiento.setPesoCorporal(Float.parseFloat(txtPesoCorporal.getText()));
-                }
-                catch(java.lang.IllegalArgumentException iae){
-                    JOptionPane.showMessageDialog(this, "Peso corporal erroneo", "",JOptionPane.WARNING_MESSAGE );
-                }
+        Entrenamiento entrenamiento = new Entrenamiento();
+        entrenamiento.setFecha((Date)Date.valueOf(LocalDate.now()));    
+        if( ! txtPesoCorporal.getText().isEmpty()){
+            try{
+                entrenamiento.setPesoCorporal(Float.parseFloat(txtPesoCorporal.getText()));
             }
-            entrenamiento.setDescripcion(txtDescripcionEntrenamiento.getText());
-            entrenamiento.setIdTemporada(temporadaSeleccionada.getTemporada().getId());
-
-            GestorBaseDatos.nuevoEntrenamiento(entrenamiento);
-            recargarEntrenamientos(entrenamiento,false);
-        }else{
-            JOptionPane.showMessageDialog(new JPanel(), "No hay ninguna temporada seleccionada", "", JOptionPane.INFORMATION_MESSAGE);
+            catch(java.lang.IllegalArgumentException iae){
+                JOptionPane.showMessageDialog(this, "Peso corporal erroneo", "",JOptionPane.WARNING_MESSAGE );
+            }
         }
+        entrenamiento.setDescripcion(txtDescripcionEntrenamiento.getText());
+        entrenamiento.setIdTemporada(temporadaSeleccionada.getTemporada().getId());
+
+        GestorBaseDatos.nuevoEntrenamiento(entrenamiento);
+        //La temporada debe actualizarse para comprobar si la fecha más reciente ha cambiado
+        actualizarTemporada();
+        recargarEntrenamientos(entrenamiento);
     }
+    
     private void nuevoEjercicio(){
-        if(entrenamientoSeleccionado != null){
-            Ejercicio ejercicio = new Ejercicio();
-            ejercicio.setIdEntrenamiento(entrenamientoSeleccionado.getEntrenamiento().getId());
+        Ejercicio ejercicio = new Ejercicio();
+        ejercicio.setIdEntrenamiento(entrenamientoSeleccionado.getEntrenamiento().getId());
 
-            GestorBaseDatos.nuevoEjercicio(ejercicio);
-            seleccionar(new CasillaEjercicio(ejercicio,this,this));
-            panelListaEjercicios.add(ejercicioSeleccionado);
-            panelListaEjercicios.updateUI();
-        }else{
-            JOptionPane.showMessageDialog(new JPanel(), "No hay ningún entrenamiento seleccionado", "", JOptionPane.INFORMATION_MESSAGE);
-        }
-    }     
+        GestorBaseDatos.nuevoEjercicio(ejercicio);
+        seleccionarEjercicio(new CasillaEjercicio(ejercicio,this,this));
+        recargarEjercicios(ejercicio);
+    }    
+    
+    
+    
     private void nuevaSerie(){
-        if(ejercicioSeleccionado != null){
-            Serie serie = new Serie();
-            serie.setIdEjercicio(ejercicioSeleccionado.getEjercicio().getId());
-            GestorBaseDatos.nuevaSerie(serie);
-            seleccionar(new CasillaSerie(serie,this,this));
-            panelListaSeries.add(serieSeleccionada);
-            panelListaSeries.updateUI();
-        }else{
-            JOptionPane.showMessageDialog(new JPanel(), "No hay ningún ejercicio seleccionado", "", JOptionPane.INFORMATION_MESSAGE);
-        }        
+        Serie serie = new Serie();
+        serie.setIdEjercicio(ejercicioSeleccionado.getEjercicio().getId());
+        GestorBaseDatos.nuevaSerie(serie);
+        seleccionarSerie(new CasillaSerie(serie,this,this));
+        recargarSeries(serie);
     }
+    
     private void nuevaSerieClonada(){
-        if(ejercicioSeleccionado != null && serieSeleccionada != null){
+        if(serieSeleccionada != null){
             Serie serieAClonar = serieSeleccionada.getSerie();
             Serie serie = new Serie();
             
@@ -848,82 +951,78 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
             serie.setIdEjercicio(ejercicioSeleccionado.getEjercicio().getId());
 
             GestorBaseDatos.nuevaSerie(serie);
-            seleccionar(new CasillaSerie(serie,this,this));
+            seleccionarSerie(new CasillaSerie(serie,this,this));
             panelListaSeries.add(serieSeleccionada);
             panelListaSeries.updateUI();
         }else{
-            JOptionPane.showMessageDialog(new JPanel(), "No hay ningún ejercicio o serie seleccionada", "", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(new JPanel(), "No hay ninguna serie seleccionada para clonar", "", JOptionPane.INFORMATION_MESSAGE);
         }        
-    }  
+    }
+    
     private void actualizarTemporada(){
+        Temporada temporada = temporadaSeleccionada.getTemporada();
         try{
-            Temporada temporada = temporadaSeleccionada.getTemporada();
-            try{
-                temporada.setFechaInicio(Date.valueOf(txtFechaInicio.getText()));
-            }
-            catch(java.lang.IllegalArgumentException iae){
-                JOptionPane.showMessageDialog(this, "La fecha introducida es erronea", "Fecha erronea",JOptionPane.WARNING_MESSAGE );
-            }
+            Date fechaInicio = Date.valueOf(txtFechaInicio.getText());
+            temporada.setFechaInicio(fechaInicio);
+            temporada.setFechaFin(GestorBaseDatos.getFechaMasReciente(temporada.getId()));
             temporada.setDescripcion(txtDescripcionTemporada.getText());
             GestorBaseDatos.actualizarTemporada(temporada);
-            recargarTemporadas(temporada,true);
-        }catch(NullPointerException e){
-            JOptionPane.showMessageDialog(new JPanel(), "No hay ningún elemento seleccionado", "", JOptionPane.INFORMATION_MESSAGE);
-        }  
+            recargarTemporadas(temporada);
+        }
+        catch(java.lang.IllegalArgumentException iae){
+            JOptionPane.showMessageDialog(this, "La fecha introducida es erronea", "Fecha erronea",JOptionPane.WARNING_MESSAGE );
+        }
     }  
+    
     private void actualizarEntrenamiento(){
+        Entrenamiento entrenamiento = entrenamientoSeleccionado.getEntrenamiento();
         try{
-            Entrenamiento entrenamiento = entrenamientoSeleccionado.getEntrenamiento();
-            try{
-                entrenamiento.setFecha(Date.valueOf(txtFecha.getText()));
-                entrenamiento.setPesoCorporal(Float.parseFloat(txtPesoCorporal.getText()));
-            }
-            catch(java.lang.IllegalArgumentException iae){
-                JOptionPane.showMessageDialog(this, "La fecha o el peso introducido es erroneo", "Formato erroneo",JOptionPane.WARNING_MESSAGE );
-            }
+            Date fecha = Date.valueOf(txtFecha.getText());
+            float pesoCorporal = Float.parseFloat(txtPesoCorporal.getText());
+            entrenamiento.setFecha(fecha);
+            entrenamiento.setPesoCorporal(pesoCorporal);  
             entrenamiento.setDescripcion(txtDescripcionEntrenamiento.getText());
             GestorBaseDatos.actualizarEntrenamiento(entrenamiento);
-            recargarEntrenamientos(entrenamiento,true);
-        }catch(NullPointerException e){
-            JOptionPane.showMessageDialog(new JPanel(), "No hay ningún elemento seleccionado", "", JOptionPane.INFORMATION_MESSAGE);
-        }  
+            //La temporada debe actualizarse para comprobar si la fecha más reciente ha cambiado
+            actualizarTemporada();
+            recargarEntrenamientos(entrenamiento);
+        }
+        catch(java.lang.IllegalArgumentException iae){
+            JOptionPane.showMessageDialog(this, "La fecha o el peso introducido es erroneo", "Formato erroneo",JOptionPane.WARNING_MESSAGE );
+        }
+        
+        //Ahora la temporada también debe actualizarse.
     }
+    
     private void actualizarEjercicio(){
-        try{
-            Ejercicio ejercicio = ejercicioSeleccionado.getEjercicio();
-            ejercicio.setNombre(txtNombre.getText());
-            ejercicio.setVariante(txtVariante.getText());
-            ejercicio.setDescripcion(txtDescripcionEjercicio.getText());
-            GestorBaseDatos.actualizarEjercicio(ejercicio);
-            ejercicioSeleccionado.generarTexto();
-            ejercicioSeleccionado.updateUI();
-        }catch(NullPointerException e){
-            JOptionPane.showMessageDialog(new JPanel(), "No hay ningún elemento seleccionado", "", JOptionPane.INFORMATION_MESSAGE);
-        } 
+        Ejercicio ejercicio = ejercicioSeleccionado.getEjercicio();
+        ejercicio.setNombre(txtNombre.getText());
+        ejercicio.setVariante(txtVariante.getText());
+        ejercicio.setDescripcion(txtDescripcionEjercicio.getText());
+        GestorBaseDatos.actualizarEjercicio(ejercicio);
+        recargarEjercicios(ejercicio);
     }
+    
     private void actualizarSerie(){
+        Serie serie = serieSeleccionada.getSerie();
         try{
-            Serie serie = serieSeleccionada.getSerie();
-            try{
-                serie.setPeso(Float.parseFloat(txtPeso.getText()));
-                serie.setRepeticiones(Integer.parseInt(txtRepeticiones.getText()));
-            }
-            catch(java.lang.IllegalArgumentException iae){
-                JOptionPane.showMessageDialog(this, "Peso o repeticiones incorrectos", "Formato erroneo",JOptionPane.WARNING_MESSAGE );
-            }
+            float peso = Float.parseFloat(txtPeso.getText());
+            int repeticiones = Integer.parseInt(txtRepeticiones.getText());
+            serie.setPeso(peso);
+            serie.setRepeticiones(repeticiones);
             serie.setExtra(txtExtra.getText());
             GestorBaseDatos.actualizarSerie(serie);
-            serieSeleccionada.generarTexto();
-            serieSeleccionada.updateUI();
-        }catch(NullPointerException e){
-            JOptionPane.showMessageDialog(new JPanel(), "No hay ningún elemento seleccionado", "", JOptionPane.INFORMATION_MESSAGE);
-        } 
+            recargarSeries(serie);
+        }
+        catch(java.lang.IllegalArgumentException iae){
+            JOptionPane.showMessageDialog(this, "Peso o repeticiones incorrectos", "Formato erroneo",JOptionPane.WARNING_MESSAGE );
+        }
     }
     
     //Métodos de actualización para registros que contienen fecha y su orden depende de ella
     
     //recarga la lista de temporadas y reselecciona la que ya estaba seleccionada en caso de que hubiera
-    private void recargarTemporadas(Temporada temporada, boolean isUpdate){
+    private void recargarTemporadas(Temporada temporada){
         addTemporadas(GestorBaseDatos.getTemporadas());
         CasillaTemporada panelTemporada = null;//Casilla que será seleccionada en la nueva lista
         
@@ -935,20 +1034,12 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
                 panelTemporada = (CasillaTemporada)c;
             }
         }
-        //Si la recarga ha sido debido a una actualización no se reseleccionada nada, salvo la propia casilla
-        if(isUpdate){
-            temporadaSeleccionada = panelTemporada;
-            temporadaSeleccionada.seleccionar();
-        }
-        //Si es nuevo, será seleccionado
-        else{
-            temporadaSeleccionada = null;
-            seleccionar(panelTemporada);
-        }
-        panelListaTemporadas.updateUI();
+        //Si existe entonces será seleccionado
+        if(panelTemporada != null)
+            seleccionarTemporada(panelTemporada);
     }
     
-    private void recargarEntrenamientos(Entrenamiento entrenamiento, boolean isUpdate){
+    private void recargarEntrenamientos(Entrenamiento entrenamiento){
         addEntrenamientos(GestorBaseDatos.getEntrenamientos(entrenamiento.getIdTemporada()));
         CasillaEntrenamiento panelEntrenamiento = null; //Casilla que será seleccionada en la nueva lista
         
@@ -960,78 +1051,44 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
                 panelEntrenamiento = (CasillaEntrenamiento)c;
             }
         }
-        //Si ha sido debido a una actualización no se reseleccionada nada, salvo la propia casilla
-        if(isUpdate){
-            entrenamientoSeleccionado = panelEntrenamiento;
-            entrenamientoSeleccionado.seleccionar();
-        }
-        //Si es nuevo, será seleccionado
-        else{
-            entrenamientoSeleccionado = null;
-            seleccionar(panelEntrenamiento);
-        }
+        //Si existe entonces será seleccionado
+        if(panelEntrenamiento != null)
+            seleccionarEntrenamiento(panelEntrenamiento);
 
-        panelListaEntrenamientos.updateUI();
     }
     
-    private void recargarCamposTemporada(){
-        clearTemporada();
-        if(temporadaSeleccionada != null){
-            Temporada temporada = temporadaSeleccionada.getTemporada();
-            if(temporada != null){
-                if(temporada.getFechaInicio() != null){
-                    txtFechaInicio.setText(temporada.getFechaInicio().toString());
-                }    
-                if(temporada.getDescripcion() != null){
-                    txtDescripcionTemporada.setText(temporada.getDescripcion());
-                }
-            }   
+    private void recargarEjercicios(Ejercicio ejercicio){
+        addEjercicios(GestorBaseDatos.getEjercicios(ejercicio.getIdEntrenamiento()));
+        CasillaEjercicio panelEjercicio = null; //Casilla que será seleccionada en la nueva lista
+        
+        //Para seleccionar el nuevo panel habrá que buscarlo en la lista de paneles de ejercicios
+        for(Component c : panelListaEjercicios.getComponents()){
+            if(c instanceof CasillaEjercicio){
+                //cuando el ehercicio de la lista coincida con el ejercicio anteriormente seleccionado
+                if(((CasillaEjercicio)c).getEjercicio().getId() == ejercicio.getId())
+                panelEjercicio = (CasillaEjercicio)c;
+            }
         }
+        //Si existe entonces será seleccionado
+        if(panelEjercicio != null)
+            seleccionarEjercicio(panelEjercicio);
     }
-    private void recargarCamposEntrenamiento(){
-        clearEntrenamiento();
-        if(entrenamientoSeleccionado != null){
-            Entrenamiento entrenamiento = entrenamientoSeleccionado.getEntrenamiento();
-            if(entrenamiento != null){
-                if(entrenamiento.getFecha() != null){
-                    txtFecha.setText(entrenamiento.getFecha().toString());
-                }
-                txtPesoCorporal.setText(Float.toString(entrenamiento.getPesoCorporal()));   
-                if(entrenamiento.getDescripcion() != null){
-                    txtDescripcionEntrenamiento.setText(entrenamiento.getDescripcion());
-                }
+    
+    private void recargarSeries(Serie serie){
+        addSeries(GestorBaseDatos.getSeries(serie.getIdEjercicio()));
+        CasillaSerie panelSerie = null; //Casilla que será seleccionada en la nueva lista
+        
+        //Para seleccionar el nuevo panel habrá que buscarlo en la lista de paneles de series
+        for(Component c : panelListaSeries.getComponents()){
+            if(c instanceof CasillaSerie){
+                //cuando la serie de la lista coincida con la serie anteriormente seleccionada
+                if(((CasillaSerie)c).getSerie().equals(serie))
+                panelSerie = (CasillaSerie)c;
             }
         }
-    } 
-    private void recargarCamposEjercicio(){
-        clearEjercicio();
-        if(ejercicioSeleccionado != null){
-            Ejercicio ejercicio = ejercicioSeleccionado.getEjercicio(); 
-            if(ejercicio != null){
-                if(ejercicio.getNombre() != null){
-                    txtNombre.setText(ejercicio.getNombre());
-                }
-                if(ejercicio.getVariante() != null){
-                    txtVariante.setText(ejercicio.getVariante()); 
-                }
-                if(ejercicio.getDescripcion() != null){
-                    txtDescripcionEjercicio.setText(ejercicio.getDescripcion());
-                }
-            }
-        }
-    }
-    private void recargarCamposSerie(){
-        clearSerie();
-        if(serieSeleccionada != null){
-            Serie serie = serieSeleccionada.getSerie();      
-            if(serie != null){
-                txtPeso.setText(Float.toString(serie.getPeso()));
-                txtRepeticiones.setText(Integer.toString(serie.getRepeticiones()));   
-                if(serie.getExtra() != null){
-                    txtExtra.setText(serie.getExtra());
-                }
-            }
-        }
+        //Si existe entonces será seleccionado
+        if(panelSerie != null)
+            seleccionarSerie(panelSerie);
     }
     
     private void setEnabledPanelTemporada(boolean b ){
@@ -1053,8 +1110,8 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
             panelListaEntrenamientos.setBackground(Color.GRAY);
             txtFechaInicio.setBackground(Color.GRAY);
             txtDescripcionTemporada.setBackground(Color.GRAY);
-            setEnabledPanelEntrenamiento(b );
         }
+        setEnabledPanelEntrenamiento(false);
     }
     
     private void setEnabledPanelEntrenamiento(boolean b ){
@@ -1079,8 +1136,8 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
             txtFecha.setBackground(Color.GRAY);
             txtPesoCorporal.setBackground(Color.GRAY);
             txtDescripcionEntrenamiento.setBackground(Color.GRAY);
-            setEnabledPanelEjercicio(b );
         }
+        setEnabledPanelEjercicio(false);
     }
     
     private void setEnabledPanelEjercicio(boolean b ){
@@ -1105,8 +1162,8 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
             txtNombre.setBackground(Color.GRAY);
             txtVariante.setBackground(Color.GRAY);
             txtDescripcionEjercicio.setBackground(Color.GRAY);
-            setEnabledPanelSerie(b);
         }
+        setEnabledPanelSerie(false);
     }
     
         private void setEnabledPanelSerie(boolean b ){

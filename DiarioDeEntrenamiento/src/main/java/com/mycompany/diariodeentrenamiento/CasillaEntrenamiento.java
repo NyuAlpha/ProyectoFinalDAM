@@ -1,6 +1,7 @@
 package com.mycompany.diariodeentrenamiento;
 
 import POJOs.Entrenamiento;
+import POJOs.Temporada;
 import java.awt.event.MouseListener;
 
 /**
@@ -26,5 +27,14 @@ public class CasillaEntrenamiento extends Casilla {
 
     public Entrenamiento getEntrenamiento() {
         return (Entrenamiento)registro;
+    }
+    
+    
+    public boolean equals (Entrenamiento e){
+        return ((Entrenamiento)registro).getId() == e.getId();
+    }
+    
+    public void clicar(){
+        interfaz.seleccionarEntrenamiento(this);
     }
 }

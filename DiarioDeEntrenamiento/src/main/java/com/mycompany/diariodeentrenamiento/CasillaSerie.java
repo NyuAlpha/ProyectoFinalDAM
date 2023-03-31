@@ -1,9 +1,7 @@
 package com.mycompany.diariodeentrenamiento;
 
 import POJOs.Serie;
-import POJOs.Temporada;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
 
 /**
  *
@@ -20,7 +18,8 @@ public class CasillaSerie extends Casilla{
     public void eliminar(){
 
         GestorBaseDatos.eliminarSerie((Serie)registro);
-        interfaz.addSeries(GestorBaseDatos.getSeries(((Serie)registro).getIdEjercicio()));
+        interfaz.eliminarPanelSerie(this);
+
     }
 
     @Override
@@ -29,5 +28,14 @@ public class CasillaSerie extends Casilla{
 
     public Serie getSerie() {
         return (Serie)registro;
-    }  
+    } 
+
+    
+    public boolean equals (Serie s){
+        return ((Serie)registro).equals(s);
+    }
+    
+    public void clicar(){
+        interfaz.seleccionarSerie(this);
+    }
 }

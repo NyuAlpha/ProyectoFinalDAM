@@ -4,6 +4,7 @@ import POJOs.Ejercicio;
 import POJOs.Entrenamiento;
 import POJOs.Serie;
 import POJOs.Temporada;
+import java.sql.Date;
 import java.util.ArrayList;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -234,6 +235,15 @@ public class GestorBaseDatos {
         tran.commit();
         session.close();
         return entrenamiento;
+    }
+    
+    public static Date getFechaMasReciente(int idTemporada){
+        Session session = iniciarSession();
+        Transaction tran = session.beginTransaction();
+        Date fecha = (Date)session.createQuery("select max(fecha) from Entrenamiento where idTemporada = " + idTemporada).uniqueResult();
+        tran.commit();
+        session.close();
+        return fecha;
     }
 
 }

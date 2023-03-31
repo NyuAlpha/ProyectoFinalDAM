@@ -70,4 +70,12 @@ public class Serie implements Serializable{
         String e = (extra == null || extra.isEmpty())? " ": (": " + extra);
         return numSerie + ": " + p + r + e;
     }
+    
+    @Override
+    public boolean equals(Object object){
+        return ((Serie)object).getIdEjercicio() == idEjercicio && ((Serie)object).getNumSerie() == numSerie;
+    }
+
+    
+    
 }

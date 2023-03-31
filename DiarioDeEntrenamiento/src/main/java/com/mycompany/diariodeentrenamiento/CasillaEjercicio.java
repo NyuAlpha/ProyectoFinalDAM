@@ -29,4 +29,13 @@ public class CasillaEjercicio extends Casilla {
         return (Ejercicio)registro;
     }
     
+    
+    public boolean equals (Ejercicio e){
+        return ((Ejercicio)registro).getId() == e.getId();
+    }
+    
+    public void clicar(){
+        interfaz.seleccionarEjercicio(this);
+    }
+    
 }
