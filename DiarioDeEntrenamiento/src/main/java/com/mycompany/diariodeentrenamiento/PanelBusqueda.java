@@ -5,7 +5,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.BoxLayout;
+import java.time.LocalDate;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -17,14 +17,11 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 /**
- * @author victo
  * Esta clase es la interfaz gráfica de usuario del panel de búsqueda de la aplicación
  */
 public class PanelBusqueda extends JPanel {
     
-
-    private JTextArea textA;
-    private JTextArea textB;
+    //Etiquetas
     private JLabel lblFechaMinima;
     private JLabel lblFechaMaxima;
     private JLabel lblEjercicio;
@@ -34,6 +31,7 @@ public class PanelBusqueda extends JPanel {
     private JLabel lblPesoMinimo;
     private JLabel lblPesoMaximo;
 
+    //Campos de formulario
     private JComboBox cbEjercicio;
     private JComboBox cbTemporada;
     private JTextField txtFechaMinima;
@@ -42,18 +40,24 @@ public class PanelBusqueda extends JPanel {
     private JTextField txtPesoCorporalMaximo;
     private JTextField txtPesoMinimo;
     private JTextField txtPesoMaximo;
+    
+    //Botones
     private JButton btnFiltrar;
     private JButton btnTransferir;
     
+    //Campos de texto y sus paneles de scroll de los resultados de búsqueda
     private JScrollPane scrollPaneA;
     private JScrollPane scrollPaneB;
+    private JTextArea textA;
+    private JTextArea textB;
 
-    
+    //Inicia todos los componentes
     public PanelBusqueda (){
         
+        //Color del panel 
         setBackground(new Color(250, 253, 138));
-        textA = new JTextArea();
-        textB = new JTextArea();
+        
+        //Etiquetas con su texto correspondiente
         lblFechaMinima = new JLabel("Después de  ");
         lblFechaMaxima = new JLabel("Antes de  ");
         lblEjercicio = new JLabel("Ejercicio ");
@@ -63,6 +67,7 @@ public class PanelBusqueda extends JPanel {
         lblPesoMinimo = new JLabel("Peso levantado mínimo ");
         lblPesoMaximo = new JLabel("Peso levantado máximo ");
 
+        //campos de formulario vacios
         cbEjercicio = new JComboBox();
         cbTemporada = new JComboBox();
         txtFechaMinima = new JTextField();
@@ -71,14 +76,25 @@ public class PanelBusqueda extends JPanel {
         txtPesoCorporalMaximo = new JTextField();
         txtPesoMinimo = new JTextField();
         txtPesoMaximo = new JTextField();
+        
+        //Botones y su texto
         btnFiltrar = new JButton("Filtrar");
         btnTransferir = new JButton("-----Transferir---->");
         
+        //Campos de texto de resultado y sus scroll pane
         scrollPaneA = new JScrollPane();
         scrollPaneB = new JScrollPane();
+        textA = new JTextArea();
+        textB = new JTextArea();
         
+        //Añadimos la fecha actual por defecto al formulario, así sirve también de guia de usuario en cuanto al formato se refiere
+        txtFechaMaxima.setText(LocalDate.now().toString());
+        
+        //Añade los paneles de texto de resultado a su scroll pane
         scrollPaneA.setViewportView(textA);
         scrollPaneB.setViewportView(textB);
+        
+        //Se personaliza cada componente
         scrollPaneA.getVerticalScrollBar().setUnitIncrement(10);
         scrollPaneB.getVerticalScrollBar().setUnitIncrement(10);
         scrollPaneA.setBackground(new Color(250, 162, 57));
@@ -92,11 +108,11 @@ public class PanelBusqueda extends JPanel {
         textA.setEditable(false);
         textB.setEditable(false);
                 
-        actualizarComboBoxEjercicio();
-        actualizarComboBoxEjercicio();
+        //Se autorellenan los comboBox
+        actualizar();
         
 
-
+        //añade la función filtrar al botón para realizar la búsqueda
         btnFiltrar.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -104,6 +120,7 @@ public class PanelBusqueda extends JPanel {
             }
         });
         
+        //Añade la función transferir al botón para pasar la información del panel de resultado izquierdo al derecho
         btnTransferir.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -112,8 +129,7 @@ public class PanelBusqueda extends JPanel {
             }
         });
         
-        setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
-        
+        //Añade un group layout para el diseño de contenedores
         GroupLayout layoutBusqueda = new GroupLayout(this);
         setLayout(layoutBusqueda);
         
@@ -186,11 +202,13 @@ public class PanelBusqueda extends JPanel {
         );
     }
     
+    //Actualiza los comboBox
     public void actualizar(){
         actualizarComboBoxEjercicio();
         actualizarComboBoxTemporada();
     }
     
+    //Actualiza el combo box temporada
     private void actualizarComboBoxTemporada(){
         cbTemporada.removeAllItems();
         cbTemporada.addItem("Todas");
@@ -199,6 +217,7 @@ public class PanelBusqueda extends JPanel {
         }
     }
     
+    //Actualiza el combo box ejercicio
     private void actualizarComboBoxEjercicio(){
         cbEjercicio.removeAllItems();
         cbEjercicio.addItem("Todos");
@@ -207,6 +226,7 @@ public class PanelBusqueda extends JPanel {
         }
     }  
     
+    //Recoge todos los datos de los campos y realiza una búsqueda, el resultado de la búsqueda lo escribe en el panel de texto izquierdo
     private void filtrar(){
         LogicaBusqueda busqueda = new LogicaBusqueda();
         busqueda.setFechaMinima(txtFechaMinima.getText());
@@ -221,6 +241,4 @@ public class PanelBusqueda extends JPanel {
         String text = busqueda.buscar();
         textA.setText(text);
     }   
-    
-
 }

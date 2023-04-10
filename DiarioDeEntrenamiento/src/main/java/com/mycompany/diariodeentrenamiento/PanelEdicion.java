@@ -1,9 +1,9 @@
 package com.mycompany.diariodeentrenamiento;
 
-import POJOs.Ejercicio;
-import POJOs.Entrenamiento;
-import POJOs.Serie;
-import POJOs.Temporada;
+import com.mycompany.POJOs.Ejercicio;
+import com.mycompany.POJOs.Entrenamiento;
+import com.mycompany.POJOs.Serie;
+import com.mycompany.POJOs.Temporada;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -29,59 +29,39 @@ import javax.swing.LayoutStyle;
 import javax.swing.border.EmptyBorder;
 
 /**
- *
- * @author victo
- * Esta clase es la interfaz gráfica de usuario del panel de edición de la aplicación
+ * Esta clase es el módulo editor de la interfaz gráfica de usuario
  */
 public class PanelEdicion extends JSplitPane implements MouseListener{
     
-    /*=======================================================================
-    Variables del panel de edición
-=========================================================================*/
-    
+    //Divisiones principales de este módulo (editor)
     private JSplitPane panelTemporadaEntrenamiento;
     private JSplitPane panelEjercicioSerie;
     
-    private JScrollPane scrollTemporadas;
-    private JScrollPane scrollEntrenamientos;
-    private JScrollPane scrollEjercicios;
-    private JScrollPane scrollSeries;
-    
-    //Los 4 posibles objetos seleccionables al mismo tiempo de la aplicación
-    private CasillaTemporada temporadaSeleccionada;
-    private CasillaEntrenamiento entrenamientoSeleccionado;
-    private CasillaEjercicio ejercicioSeleccionado;
-    private CasillaSerie serieSeleccionada;
-    
-/*=======================================================================
-    Paneles
-=========================================================================*/
+    //Paneles principales del editor
     private JPanel panelTemporada;
     private JPanel panelEntrenamiento;
     private JPanel panelEjercicio;
     private JPanel panelSerie;
+    
+    //ScrollPane de los paneles de registros
+    private JScrollPane scrollTemporadas;
+    private JScrollPane scrollEntrenamientos;
+    private JScrollPane scrollEjercicios;
+    private JScrollPane scrollSeries;    
+    
+    //Paneles de registros
     private JPanel panelListaTemporadas;
     private JPanel panelListaEntrenamientos;
     private JPanel panelListaEjercicios;
     private JPanel panelListaSeries;
-  
-/*=======================================================================
-    Campos de texto
-=========================================================================*/
-    private JTextField txtFechaInicio;
-    private JTextField txtDescripcionTemporada;
-    private JTextField txtFecha;
-    private JTextField txtPesoCorporal;
-    private JTextField txtDescripcionEntrenamiento;
-    private JTextField txtNombre;
-    private JTextField txtVariante;
-    private JTextField txtDescripcionEjercicio;
-    private JTextField txtPeso;
-    private JTextField txtRepeticiones;
-    private JTextField txtExtra;
-/*=======================================================================
-    Etiquetas
-=========================================================================*/    
+    
+    //Las 4 posibles casillas seleccionables al mismo tiempo de la aplicación
+    private CasillaSeleccionableTemporada temporadaSeleccionada;
+    private CasillaSeleccionableEntrenamiento entrenamientoSeleccionado;
+    private CasillaSeleccionableEjercicio ejercicioSeleccionado;
+    private CasillaSeleccionableSerie serieSeleccionada;
+
+    //Etiquetas del editor
     private JLabel lblTemporadas;
     private JLabel lblFechaInicio;
     private JLabel lblDescripcionTemporada;
@@ -101,11 +81,24 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
     private JLabel lblEntrenamientoInfo;
     private JLabel lblEjercicioInfo;
     private JLabel lblSerieInfo;
-    
+
+    //Label especial para representar listas vacias
     private JLabel lblVacio;
-/*=======================================================================
-    Botones
-=========================================================================*/    
+    
+    //Campos de texto de los formularios del editor
+    private JTextField txtFechaInicio;
+    private JTextField txtDescripcionTemporada;
+    private JTextField txtFecha;
+    private JTextField txtPesoCorporal;
+    private JTextField txtDescripcionEntrenamiento;
+    private JTextField txtNombre;
+    private JTextField txtVariante;
+    private JTextField txtDescripcionEjercicio;
+    private JTextField txtPeso;
+    private JTextField txtRepeticiones;
+    private JTextField txtExtra;
+
+    //Botones del editor
     private JButton btnGuardarTemporada;
     private JButton btnAnnadirTemporada;
     private JButton btnGuardarEntrenamiento;
@@ -116,12 +109,10 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
     private JButton btnAnnadirSerie;
     private JButton btnclonarSerie;
     
+    //Constructor
     public PanelEdicion(){
-        
-/*=================================================================================================
-                      Tabbed del panel de edición
-    ===================================================================================================*/        
-        
+      
+        //Inicio de todos los campos y componentes
         panelTemporadaEntrenamiento = new JSplitPane();
         panelEjercicioSerie = new JSplitPane();
                 
@@ -140,6 +131,8 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
         panelListaEjercicios = new JPanel();
         panelListaSeries = new JPanel();
         
+        
+        //Etiquetas
         lblTemporadaInfo = new JLabel("Temporada seleccionada");
         lblTemporadaInfo.setFont(new Font(Font.DIALOG,Font.BOLD,15));
         lblEntrenamientoInfo = new JLabel("Entrenamiento seleccionado");
@@ -176,6 +169,7 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
         lblVacio.setForeground(Color.LIGHT_GRAY);
         
         
+        //Texto
         txtFechaInicio = new JTextField();
         txtDescripcionTemporada = new JTextField();
         txtFecha = new JTextField();
@@ -187,27 +181,8 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
         txtPeso = new JTextField();
         txtRepeticiones = new JTextField();
         txtExtra = new JTextField();
-        
-        //Botones
-        btnGuardarTemporada = new JButton(new ImageIcon(".\\src\\main\\java\\iconos\\save.png"));
-        btnGuardarTemporada.setToolTipText("Guardar cambios de temporada");
-        btnAnnadirTemporada = new JButton(new ImageIcon(".\\src\\main\\java\\iconos\\add.png"));
-        btnAnnadirTemporada.setToolTipText("Nueva temporada");
-        btnGuardarEntrenamiento = new JButton(new ImageIcon(".\\src\\main\\java\\iconos\\save.png"));
-        btnGuardarEntrenamiento.setToolTipText("Guardar cambios de entrenamiento");
-        btnAnnadirEntrenamiento = new JButton(new ImageIcon(".\\src\\main\\java\\iconos\\add.png"));
-        btnAnnadirEntrenamiento.setToolTipText("Nuevo entrenamiento");
-        btnGuardarEjercicio = new JButton(new ImageIcon(".\\src\\main\\java\\iconos\\save.png"));
-        btnGuardarEjercicio.setToolTipText("Guardar cambios del ejercicio");
-        btnAnnadirEjercicio = new JButton(new ImageIcon(".\\src\\main\\java\\iconos\\add.png"));
-        btnAnnadirEjercicio.setToolTipText("Nuevo ejercicio");
-        btnGuardarSerie = new JButton(new ImageIcon(".\\src\\main\\java\\iconos\\save.png"));
-        btnGuardarSerie.setToolTipText("Guardar cambios de la serie");
-        btnAnnadirSerie = new JButton(new ImageIcon(".\\src\\main\\java\\iconos\\add.png"));
-        btnAnnadirSerie.setToolTipText("Nueva serie");
-        btnclonarSerie = new JButton(new ImageIcon(".\\src\\main\\java\\iconos\\clone.png"));
-        btnclonarSerie.setToolTipText("Clonar serie");
 
+        //Diseño de componentes
         panelTemporada.setBackground(new Color(180, 160, 255));
         lblTemporadas.setFont(new Font(Font.DIALOG,Font.BOLD,15));
         panelListaTemporadas.setLayout(new BoxLayout(panelListaTemporadas,BoxLayout.Y_AXIS));
@@ -244,6 +219,28 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
         scrollSeries.setBorder(new EmptyBorder(5,5,5,5));
         scrollSeries.getVerticalScrollBar().setUnitIncrement(10);
         
+        
+        //Inicialización,icono, diseño y eventos de los botones
+        btnGuardarTemporada = new JButton(new ImageIcon(getClass().getResource("/iconos/save.png")));
+        btnGuardarTemporada.setToolTipText("Guardar cambios de temporada");
+        btnAnnadirTemporada = new JButton(new ImageIcon(getClass().getResource("/iconos/add.png")));
+        btnAnnadirTemporada.setToolTipText("Nueva temporada");
+        btnGuardarEntrenamiento = new JButton(new ImageIcon(getClass().getResource("/iconos/save.png")));
+        btnGuardarEntrenamiento.setToolTipText("Guardar cambios de entrenamiento");
+        btnAnnadirEntrenamiento = new JButton(new ImageIcon(getClass().getResource("/iconos/add.png")));
+        btnAnnadirEntrenamiento.setToolTipText("Nuevo entrenamiento");
+        btnGuardarEjercicio = new JButton(new ImageIcon(getClass().getResource("/iconos/save.png")));
+        btnGuardarEjercicio.setToolTipText("Guardar cambios del ejercicio");
+        btnAnnadirEjercicio = new JButton(new ImageIcon(getClass().getResource("/iconos/add.png")));
+        btnAnnadirEjercicio.setToolTipText("Nuevo ejercicio");
+        btnGuardarSerie = new JButton(new ImageIcon(getClass().getResource("/iconos/save.png")));
+        btnGuardarSerie.setToolTipText("Guardar cambios de la serie");
+        btnAnnadirSerie = new JButton(new ImageIcon(getClass().getResource("/iconos/add.png")));
+        btnAnnadirSerie.setToolTipText("Nueva serie");
+        btnclonarSerie = new JButton(new ImageIcon(getClass().getResource("/iconos/clone.png")));
+        btnclonarSerie.setToolTipText("Clonar serie");
+        
+        
         btnGuardarTemporada.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         btnAnnadirTemporada.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         btnGuardarEntrenamiento.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -254,6 +251,8 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
         btnAnnadirSerie.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         btnclonarSerie.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         
+        //Acciones de los botones, hacen lo que su nombre dice que hacen
+        
         btnGuardarTemporada.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -261,12 +260,14 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
                     actualizarTemporada();
             }
         });
+
         btnAnnadirTemporada.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
                 nuevaTemporada();
             }
         });
+
         btnGuardarEntrenamiento.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -274,12 +275,14 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
                     actualizarEntrenamiento();
             }
         });
+
         btnAnnadirEntrenamiento.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
                 nuevoEntrenamiento();
             }
         });
+
         btnGuardarEjercicio.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -287,6 +290,7 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
                     actualizarEjercicio();
             }
         });
+
         btnAnnadirEjercicio.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -312,7 +316,10 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
                 nuevaSerieClonada();
             }
         });
-//------------------------------------------------------------------------------------------------------   
+
+        
+        //Diseño del panel de temporadas con GroupLayout, es el panel con menos subcomponentes
+        
         GroupLayout layout = new GroupLayout(panelTemporada);
         panelTemporada.setLayout(layout);
         layout.setAutoCreateGaps(true);
@@ -333,7 +340,9 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
             .addComponent(scrollTemporadas)
             .addGap(15)
         );
-//------------------------------------------------------------------------------------------------------
+        
+        
+        //Diseño del panel de entrenamiento con GroupLayout
         GroupLayout layoutPanelEntrenamiento = new GroupLayout(panelEntrenamiento);
         panelEntrenamiento.setLayout(layoutPanelEntrenamiento);
         layoutPanelEntrenamiento.setAutoCreateGaps(true);
@@ -387,7 +396,9 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
             .addComponent(scrollEntrenamientos)
             .addGap(15)
         );
-//------------------------------------------------------------------------------------------------------
+
+        
+        //Diseño del panel de ejercicio con GroupLayout
         GroupLayout layoutPanelEjercicio = new GroupLayout(panelEjercicio);
         panelEjercicio.setLayout(layoutPanelEjercicio);
         layoutPanelEjercicio.setAutoCreateGaps(true);
@@ -447,7 +458,8 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
             .addComponent(scrollEjercicios)
             .addGap(15)
         );
-//------------------------------------------------------------------------------------------------------
+
+        //Diseño del panel de serie con GroupLayout, es el panel con más subcomponentes
         GroupLayout layoutPanelSerie = new GroupLayout(panelSerie);
         panelSerie.setLayout(layoutPanelSerie);
         layoutPanelSerie.setAutoCreateGaps(true);
@@ -455,7 +467,7 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
         
         layoutPanelSerie.setHorizontalGroup(layoutPanelSerie.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addComponent(lblEjercicioInfo)
-            .addGroup(layoutPanelSerie.createSequentialGroup()//Grupo del formulario y boton
+            .addGroup(layoutPanelSerie.createSequentialGroup()//Grupo del formulario y botón
                 .addGap(20)//Margen del formulario
                 .addGroup(layoutPanelSerie.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(lblNombre)
@@ -548,49 +560,63 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
             .addGap(50)
         );
         
-        //Estableciendo todos los SplitPane de la pantalla
-        setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+        //Estableciendo el splitPane principal, dividido en 2 partes horizontalmente
+        setOrientation(JSplitPane.HORIZONTAL_SPLIT);//Horientación 
         setRightComponent(panelEjercicioSerie);
         setLeftComponent(panelTemporadaEntrenamiento);
         setDividerLocation(400);
         
+        //Este split pane va en la zona izquierda y se divide verticalmente
         panelTemporadaEntrenamiento.setOrientation(JSplitPane.VERTICAL_SPLIT);
         panelTemporadaEntrenamiento.setTopComponent(panelTemporada);
         panelTemporadaEntrenamiento.setBottomComponent(panelEntrenamiento);
-        setEnabledPanelTemporada(false);
-
         panelTemporadaEntrenamiento.setDividerLocation(250);
         
+        //Este split pane va en la zona derecha y se vuelve a dividir horizontalmente
         panelEjercicioSerie.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
         panelEjercicioSerie.setRightComponent(panelSerie);
         panelEjercicioSerie.setLeftComponent(panelEjercicio);
         panelEjercicioSerie.setDividerLocation(390);
         
+        //Bloqueo de todos los subcomponentes al iniciar la aplicación
+        setEnabledPanelTemporada(false);
+        
+        //Se añaden los únicos registros que deben estar siempre cargados si los hay
         addTemporadas(GestorBaseDatos.getTemporadas());
     }
     
-/*=========================================================================================
-        Métodos de funcionalidad a evento de mouse
-===========================================================================================*/
+    
+    /****************************************************
+            Métodos sobreescritos de MouseListener
+    *****************************************************/
     
     @Override
+    //Si se pulsa el componente llama a clicar y este será seleccionado o deseleccionado
     public void mouseClicked(MouseEvent e) {
-        ((Casilla)e.getComponent()).clicar();
+        ((CasillaSeleccionable)e.getComponent()).clicar();
     }
     @Override
     public void mousePressed(MouseEvent e) {}
     @Override
     public void mouseReleased(MouseEvent e) {}
     @Override
+    //Si pasas el mouse por encima del componente este cambiará su color
     public void mouseEntered(MouseEvent e) {
-        ((Casilla)e.getComponent()).activar();
+        ((CasillaSeleccionable)e.getComponent()).activar();
     }
     @Override
+    //Si el mouse sale del componente este vuelve a su estado original
     public void mouseExited(MouseEvent e) {
-        ((Casilla)e.getComponent()).desactivar();
+        ((CasillaSeleccionable)e.getComponent()).desactivar();
     }
     
-    public void seleccionarTemporada(CasillaTemporada casillaTemporada){
+    /******************************************************
+                Métodos de la propia clase
+    *******************************************************/
+    
+    //Selecciona la temporada enviada por parámetro, pero puede deseleccionarla si ya estaba seleccionada.
+    //También puede bloquear y borrar subcontenedores si estos ya no están seleccionados.
+    public void seleccionarTemporada(CasillaSeleccionableTemporada casillaTemporada){
         
         //Si ya estaba seleccionada se deselecciona y se anula la temporada seleccionada , se desactivan los subcontenedores
         if(temporadaSeleccionada != null && temporadaSeleccionada.equals(casillaTemporada.getTemporada())){
@@ -601,12 +627,12 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
                 clearTemporada();
             }
             else{
-                //reselección fantasma. Solo se activará en caso de actualización de la lista
+                //reselección fantasma, es automática e imperceptible, solo se activará en caso de actualización de la lista
                 temporadaSeleccionada = casillaTemporada;
                 temporadaSeleccionada.seleccionar();
             }
         }
-        //Si no había nada seleccionado o no eran la misma le asigna la nueva casilla y activa el componente de temporadas
+        //Si no había nada seleccionado o no eran la misma le asigna la nueva casilla y activa el contenedor de entrenamientos
         else{
             clearTemporada();
             if(temporadaSeleccionada != null)
@@ -626,11 +652,12 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
         }
     }
     
-    public void seleccionarEntrenamiento(CasillaEntrenamiento casillaEntrenamiento){
+    //Selecciona el entrenamiento enviado por parámetro, pero puede deseleccionarlo si ya estaba seleccionado.
+    //También puede bloquear y borrar subcontenedores si estos ya no están seleccionados.
+    public void seleccionarEntrenamiento(CasillaSeleccionableEntrenamiento casillaEntrenamiento){
         
-        //Si ya estaba seleccionada se deselecciona y se anula el entrenamiento seleccionado , se desactivan los subcontenedores
         if(entrenamientoSeleccionado != null && entrenamientoSeleccionado.equals(casillaEntrenamiento.getEntrenamiento())){
-            //deselecciona el panel al volver a intentar selecionarlo
+            
             if(casillaEntrenamiento.isSeleccionado()){
                 entrenamientoSeleccionado.deseleccionar();
                 entrenamientoSeleccionado = null;
@@ -638,12 +665,12 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
                 clearEntrenamiento();
             }
             else{
-                //reselección fantasma. Solo se activará en caso de actualización de la lista
+                //reselección fantasma, es automática e imperceptible, solo se activará en caso de actualización de la lista
                 entrenamientoSeleccionado = casillaEntrenamiento;
                 entrenamientoSeleccionado.seleccionar();
             }
         }
-        //Si no había nada seleccionado o no eran la misma le asigna la nueva casilla y activa el componente de entrenamientos
+        //Si no había nada seleccionado o no eran la misma le asigna la nueva casilla y activa el contenedor de ejercicios
         else{
             clearEntrenamiento();
             if(entrenamientoSeleccionado != null)
@@ -665,9 +692,10 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
         }
     }
         
-    public void seleccionarEjercicio(CasillaEjercicio casillaEjercicio){
+    //Selecciona el ejercicio enviado por parámetro, pero puede deseleccionarlo si ya estaba seleccionado.
+    //También puede bloquear y borrar subcontenedores si estos ya no están seleccionados.
+    public void seleccionarEjercicio(CasillaSeleccionableEjercicio casillaEjercicio){
         
-        //Si ya estaba seleccionada se deselecciona y se anula el ejercicio seleccionado , se desactivan los subcontenedores
         if(ejercicioSeleccionado != null && ejercicioSeleccionado.equals(casillaEjercicio.getEjercicio())){
             if(casillaEjercicio.isSeleccionado()){
                 ejercicioSeleccionado.deseleccionar();
@@ -676,12 +704,12 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
                 clearEjercicio();
             }
             else{
-                //reselección fantasma. Solo se activará en caso de actualización de la lista
+                //reselección fantasma, es automática e imperceptible, solo se activará en caso de actualización de la lista
                 ejercicioSeleccionado = casillaEjercicio;
                 ejercicioSeleccionado.seleccionar();
             }
         }
-        //Si no había nada seleccionado o no eran la misma le asigna la nueva casilla y activa el componente de ejercicios
+        //Si no había nada seleccionado o no eran la misma le asigna la nueva casilla y activa el contenedor de series
         else{
             clearEjercicio();
             if(ejercicioSeleccionado != null)
@@ -705,9 +733,11 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
         }
     }
 
-    public void seleccionarSerie(CasillaSerie casillaSerie){
+    //Selecciona la serie enviada por parámetro, pero puede deseleccionarla si ya estaba seleccionada.
+    //También puede bloquear y borrar subcontenedores si estos ya no están seleccionados.
+    public void seleccionarSerie(CasillaSeleccionableSerie casillaSerie){
         
-        //Si ya estaba seleccionada se deselecciona y se anula el serie seleccionada , se desactivan los subcontenedores
+        //Si ya estaba seleccionada se deselecciona y se anula la serie seleccionada , se desactivan los subcontenedores
         if(serieSeleccionada != null && serieSeleccionada.equals(casillaSerie.getSerie())){
             if(casillaSerie.isSeleccionado()){
                 serieSeleccionada.deseleccionar();
@@ -716,7 +746,7 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
                 clearSerie();
             }
             else{
-                //reselección fantasma. Solo se activará en caso de actualización de la lista
+                //reselección fantasma, es automática e imperceptible, solo se activará en caso de actualización de la lista
                 serieSeleccionada = casillaSerie;
                 serieSeleccionada.seleccionar();
             }
@@ -741,29 +771,29 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
         }
     }
     
-    //=======================================================
-    
-    public void eliminarPanelTemporada(CasillaTemporada panelTemporada){
-        //Si no había ningúna temporada previamente seleccionado hace una recarga normal
+    //Elimina la casilla de la temporada enviada por parámetro del listado de temporadas
+    public void eliminarCasillaTemporada(CasillaSeleccionableTemporada casillaTemporada){
+        //Si no había ningúna temporada seleccionada y se elimina hace una recarga normal, borrandola sin más
         if(temporadaSeleccionada == null)
-            recargarTemporadas(panelTemporada.getTemporada());
+            recargarTemporadas(casillaTemporada.getTemporada());
         else{
             //Si la temporada eliminada estaba seleccionada limpia y bloquea sus campos
-            if((panelTemporada).equals(temporadaSeleccionada)){
+            if((casillaTemporada).equals(temporadaSeleccionada)){
                 setEnabledPanelTemporada(false);
                 clearTemporada();
                 temporadaSeleccionada = null;
-                recargarTemporadas(panelTemporada.getTemporada());
+                recargarTemporadas(casillaTemporada.getTemporada());
             }
-            //si son distintos reselecciona el que no se ha eliminado
+            //si la temporada seleccionada y la que se desea elimniar no son la misma se reselecciona la que estaba seleccionada
             else
                 recargarTemporadas(temporadaSeleccionada.getTemporada());
         }
     }
     
-    public void eliminarPanelEntrenamiento(CasillaEntrenamiento panelEntrenamiento){
+    //Elimina la casilla del entrenamiento enviado por parámetro del listado de entrenamientos
+    public void eliminarPanelEntrenamiento(CasillaSeleccionableEntrenamiento panelEntrenamiento){
     
-        //Si no había ningún entrenamiento previamente seleccionado hace una recarga normal
+        //Si no había ningún entrenamiento seleccionado y se elimina hace una recarga normal, borrandolo sin más
         if(entrenamientoSeleccionado == null)
             recargarEntrenamientos(panelEntrenamiento.getEntrenamiento());
         else{
@@ -774,16 +804,17 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
                 entrenamientoSeleccionado = null;
                 recargarEntrenamientos(panelEntrenamiento.getEntrenamiento());
             }
-            //si son distintos reselecciona el que no se ha eliminado
+            //si el entrenamiento seleccionado y el que se desea elimniar no son el mismo se reselecciona el que estaba seleccionado
             else
                 recargarEntrenamientos(entrenamientoSeleccionado.getEntrenamiento());
         }
-        //Actualiza temporada por si las fechas cambian
+        //Actualiza la temporada a la que pertenece por si las fechas han cambiado y son relevantes
         actualizarTemporada();
     }
     
-    public void eliminarPanelEjercicio(CasillaEjercicio panelEjercicio){
-        //Si no había ningún ejercicio previamente seleccionado hace una recarga normal
+    //Elimina la casilla del ejercicio enviado por parámetro del listado de ejercicios
+    public void eliminarPanelEjercicio(CasillaSeleccionableEjercicio panelEjercicio){
+        //Si no había ningún ejercicio seleccionado y se elimina hace una recarga normal, borrandolo sin más
         if(ejercicioSeleccionado == null)
             recargarEjercicios(panelEjercicio.getEjercicio());
         else{
@@ -794,30 +825,32 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
                 ejercicioSeleccionado = null;
                 recargarEjercicios(panelEjercicio.getEjercicio());
             }
-            //si son distintos reselecciona el que no se ha eliminado
+            //si el ejercicio seleccionado y el que se desea elimniar no son el mismo se reselecciona el que estaba seleccionado
             else
                 recargarEjercicios(ejercicioSeleccionado.getEjercicio());
         }
     }
     
-    public void eliminarPanelSerie(CasillaSerie casillaEliminada){
+    //Elimina la casilla de la serie enviada por parámetro del listado de series
+    public void eliminarPanelSerie(CasillaSeleccionableSerie casillaEliminada){
         
         //Eliminar serie implica una reubicación de las series, por lo que hay que recargar todas las series desde la base de datos
         panelListaSeries.removeAll();//Se borra la lista previa.
         clearSerie();
-        //Como las series pueden ser modificadas cuando se elimina alguna no es posible identificar cual estaba seleccionada previamente
+        //Como las series pueden ser modificadas cuando se elimina alguna, no es posible identificar cual estaba seleccionada previamente
+        //Así que las recarga todas sin más, no llama al metodo recargar series
         addSeries(GestorBaseDatos.getSeries(casillaEliminada.getSerie().getIdEjercicio()));
-        setEnabledPanelSerie(false);
+        setEnabledPanelSerie(false);//desactiva el panel de formulario de serie
+        //Además si la serie seleccionada es la serie eliminada, la serie seleccionada se anula.
         if(serieSeleccionada.equals(panelSerie))
             serieSeleccionada = null;
     }
     
-    //======================================================
-    
+    //Añade temporadas en forma de casillas seleccionables, enviandole como parámetro la lista de temporadas
     public void addTemporadas(ArrayList <Temporada> temporadas){
         panelListaTemporadas.removeAll();
         for(Temporada t : temporadas){
-            panelListaTemporadas.add(new CasillaTemporada(t,this,this));
+            panelListaTemporadas.add(new CasillaSeleccionableTemporada(t,this,this));
         }
         if(temporadas.isEmpty()){
             panelListaTemporadas.add(lblVacio);
@@ -825,10 +858,11 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
         panelListaTemporadas.updateUI();
     }
     
+    //Añade entrenamientos en forma de casillas seleccionables, enviandole como parámetro una lista de entrenamientos
     public void addEntrenamientos(ArrayList <Entrenamiento> entrenamientos){   
         panelListaEntrenamientos.removeAll();
         for(Entrenamiento ent : entrenamientos){
-            panelListaEntrenamientos.add(new CasillaEntrenamiento(ent,this,this));
+            panelListaEntrenamientos.add(new CasillaSeleccionableEntrenamiento(ent,this,this));
         }
         if(entrenamientos.isEmpty()){
             panelListaEntrenamientos.add(lblVacio);
@@ -836,10 +870,11 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
         panelListaEntrenamientos.updateUI();
     }
     
+    //Añade ejercicios en forma de casillas seleccionables, enviandole como parámetro una lista de ejercicios
     public void addEjercicios(ArrayList <Ejercicio> ejercicios){
         panelListaEjercicios.removeAll();
         for(Ejercicio ej: ejercicios){
-            panelListaEjercicios.add(new CasillaEjercicio(ej,this,this));
+            panelListaEjercicios.add(new CasillaSeleccionableEjercicio(ej,this,this));
         }
         if(ejercicios.isEmpty()){
             panelListaEjercicios.add(lblVacio);
@@ -847,10 +882,11 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
         panelListaEjercicios.updateUI();
     }
     
+    //Añade series en forma de casillas seleccionables, enviandole como parámetro una lista de series
     public void addSeries(ArrayList <Serie> series){
         panelListaSeries.removeAll();
         for(Serie s : series){
-            panelListaSeries.add(new CasillaSerie(s,this,this));
+            panelListaSeries.add(new CasillaSeleccionableSerie(s,this,this));
         }
         if(series.isEmpty()){
             panelListaSeries.add(lblVacio);
@@ -858,7 +894,7 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
         panelListaSeries.updateUI();
     }
 
-    //Métodos para limpiar en cascada las listas de los subcontenedores de cada entidad
+    //Limpia en cascada los componentes y subcomponentes de una temporada
     private void clearTemporada(){
         txtFechaInicio.setText("");
         txtDescripcionTemporada.setText("");
@@ -867,6 +903,7 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
         entrenamientoSeleccionado = null;
         clearEntrenamiento();
     }
+    //Limpia en cascada los componentes y subcomponentes de un entrenamiento
     private void clearEntrenamiento(){
         txtFecha.setText("");
         txtPesoCorporal.setText("");
@@ -876,6 +913,7 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
         ejercicioSeleccionado = null;
         clearEjercicio();
     }
+    //Limpia en cascada los componentes y subcomponentes de un ejercicio
     private void clearEjercicio(){
         txtNombre.setText("");
         txtVariante.setText("");
@@ -884,7 +922,8 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
         panelListaSeries.updateUI();
         serieSeleccionada = null;
         clearSerie();
-    }  
+    }
+    //Limpia el componente de una serie
     private void clearSerie(){
         txtPeso.setText("");
         txtRepeticiones.setText("");
@@ -892,15 +931,18 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
     }
     
     
-    //Métodos de creación de registros
+    //Crea una nueva temporada
     private void nuevaTemporada(){
         Temporada temporada = new Temporada();
         temporada.setFechaInicio((Date)Date.valueOf(LocalDate.now()));
         temporada.setDescripcion("Sin nombrar");
+        //la añade a la base de datos y recarga todas las temporadas para reorganizarlas por fecha.
         GestorBaseDatos.nuevaTemporada(temporada);
         recargarTemporadas(temporada);
         
-    }  
+    }
+    
+    //Crea un nuevo entrenamiento
     private void nuevoEntrenamiento(){
         Entrenamiento entrenamiento = new Entrenamiento();
         entrenamiento.setFecha((Date)Date.valueOf(LocalDate.now()));    
@@ -914,32 +956,38 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
         }
         entrenamiento.setDescripcion(txtDescripcionEntrenamiento.getText());
         entrenamiento.setIdTemporada(temporadaSeleccionada.getTemporada().getId());
-
+        //Lo añade en la base de datos
         GestorBaseDatos.nuevoEntrenamiento(entrenamiento);
         //La temporada debe actualizarse para comprobar si la fecha más reciente ha cambiado
         actualizarTemporada();
+        //Recarga los entrenamientos para reorganizarlos por fecha
         recargarEntrenamientos(entrenamiento);
     }
     
+    //Crea un nuevo ejercicio
     private void nuevoEjercicio(){
         Ejercicio ejercicio = new Ejercicio();
         ejercicio.setIdEntrenamiento(entrenamientoSeleccionado.getEntrenamiento().getId());
-
+        //Lo añade a la base de datos 
         GestorBaseDatos.nuevoEjercicio(ejercicio);
-        seleccionarEjercicio(new CasillaEjercicio(ejercicio,this,this));
+        
+        //seleccionarEjercicio(new CasillaSeleccionableEjercicio(ejercicio,this,this));
+        //recarga todos los ejercicios nuevamente
         recargarEjercicios(ejercicio);
     }    
-    
-    
-    
+
+    //Crea una nueva serie
     private void nuevaSerie(){
         Serie serie = new Serie();
         serie.setIdEjercicio(ejercicioSeleccionado.getEjercicio().getId());
+        //Añade la serie a la base de datos
         GestorBaseDatos.nuevaSerie(serie);
-        seleccionarSerie(new CasillaSerie(serie,this,this));
+        //seleccionarSerie(new CasillaSeleccionableSerie(serie,this,this));
+        //Recarga todas las series nuevamente
         recargarSeries(serie);
     }
     
+    //Clona una serie previamente seleccionada
     private void nuevaSerieClonada(){
         if(serieSeleccionada != null){
             Serie serieAClonar = serieSeleccionada.getSerie();
@@ -950,23 +998,32 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
             serie.setExtra(serieAClonar.getExtra());
             serie.setIdEjercicio(ejercicioSeleccionado.getEjercicio().getId());
 
+            //añade la serie a la base de datos
             GestorBaseDatos.nuevaSerie(serie);
-            seleccionarSerie(new CasillaSerie(serie,this,this));
-            panelListaSeries.add(serieSeleccionada);
-            panelListaSeries.updateUI();
+            //seleccionarSerie(new CasillaSeleccionableSerie(serie,this,this));
+            //panelListaSeries.add(serieSeleccionada);
+            //panelListaSeries.updateUI();
+            //Recarga todas las series nuevamente
+            recargarSeries(serie);
+        //Else temporal, hasta asegurarnos de que solo se peude clonar si obligatoriamente hay algo selecionado
         }else{
             JOptionPane.showMessageDialog(new JPanel(), "No hay ninguna serie seleccionada para clonar", "", JOptionPane.INFORMATION_MESSAGE);
         }        
     }
     
+    //Realiza cambios en la temporada seleccionada y los guarda.
     private void actualizarTemporada(){
         Temporada temporada = temporadaSeleccionada.getTemporada();
+        //Try para prevenir formato inválido, en caso de error avisará al usuario de la app
         try{
             Date fechaInicio = Date.valueOf(txtFechaInicio.getText());
             temporada.setFechaInicio(fechaInicio);
+            //Usa la fecha del último entrenamiento
             temporada.setFechaFin(GestorBaseDatos.getFechaMasReciente(temporada.getId()));
             temporada.setDescripcion(txtDescripcionTemporada.getText());
+            //Actualiza en la base de datos
             GestorBaseDatos.actualizarTemporada(temporada);
+            //Recarga todas las temporadas y reselecciona la temporada que ha sido actualizada en este método
             recargarTemporadas(temporada);
         }
         catch(java.lang.IllegalArgumentException iae){
@@ -974,44 +1031,53 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
         }
     }  
     
+    //Realiza cambios en el entrenamiento seleccionado y los guarda.
     private void actualizarEntrenamiento(){
         Entrenamiento entrenamiento = entrenamientoSeleccionado.getEntrenamiento();
+        //Try para prevenir formato inválido, en caso de error avisará al usuario de la app
         try{
             Date fecha = Date.valueOf(txtFecha.getText());
             float pesoCorporal = Float.parseFloat(txtPesoCorporal.getText());
             entrenamiento.setFecha(fecha);
             entrenamiento.setPesoCorporal(pesoCorporal);  
             entrenamiento.setDescripcion(txtDescripcionEntrenamiento.getText());
+            //Actualiza en la base de datos
             GestorBaseDatos.actualizarEntrenamiento(entrenamiento);
             //La temporada debe actualizarse para comprobar si la fecha más reciente ha cambiado
             actualizarTemporada();
+            //Recarga la lista de entrenamientos y reselecciona el entrenamiento actualizado
             recargarEntrenamientos(entrenamiento);
         }
         catch(java.lang.IllegalArgumentException iae){
             JOptionPane.showMessageDialog(this, "La fecha o el peso introducido es erroneo", "Formato erroneo",JOptionPane.WARNING_MESSAGE );
         }
-        
-        //Ahora la temporada también debe actualizarse.
     }
     
+    //Realiza cambios en el ejercicio seleccionado y los guarda.
     private void actualizarEjercicio(){
         Ejercicio ejercicio = ejercicioSeleccionado.getEjercicio();
         ejercicio.setNombre(txtNombre.getText());
         ejercicio.setVariante(txtVariante.getText());
         ejercicio.setDescripcion(txtDescripcionEjercicio.getText());
+        //Actualiza en la base de datos
         GestorBaseDatos.actualizarEjercicio(ejercicio);
+        //Recarga la lista de ejercicios y reselecciona el entrenamiento actualizado
         recargarEjercicios(ejercicio);
     }
     
+    //Realiza cambios en la serie seleccionada y los guarda
     private void actualizarSerie(){
         Serie serie = serieSeleccionada.getSerie();
+        //Try para prevenir formato inválido, en caso de error avisará al usuario de la app
         try{
             float peso = Float.parseFloat(txtPeso.getText());
             int repeticiones = Integer.parseInt(txtRepeticiones.getText());
             serie.setPeso(peso);
             serie.setRepeticiones(repeticiones);
             serie.setExtra(txtExtra.getText());
+            //Actualiza en la base de datos
             GestorBaseDatos.actualizarSerie(serie);
+            //Recarga la lista de series y reselecciona la serie que ha sido actualizada
             recargarSeries(serie);
         }
         catch(java.lang.IllegalArgumentException iae){
@@ -1019,91 +1085,82 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
         }
     }
     
-    //Métodos de actualización para registros que contienen fecha y su orden depende de ella
     
-    //recarga la lista de temporadas y reselecciona la que ya estaba seleccionada en caso de que hubiera
+    //Recarga la lista de temporadas y reselecciona la enviada como parámetro si aún existe
     private void recargarTemporadas(Temporada temporada){
-        addTemporadas(GestorBaseDatos.getTemporadas());
-        CasillaTemporada panelTemporada = null;//Casilla que será seleccionada en la nueva lista
+        addTemporadas(GestorBaseDatos.getTemporadas());//Renueva la lista de temporadas
         
-        //Para seleccionar el nuevo panel habrá que buscarlo en la lista de paneles de temporada
+        //Recorre la lista de temporadas en busca de la temporada indicada
         for(Component c : panelListaTemporadas.getComponents()){
-            if(c instanceof CasillaTemporada){
-                //cuando la temporada de la lista coincida con la temporada anteriormente seleccionada
-                if(((CasillaTemporada)c).getTemporada().getId() == temporada.getId())
-                panelTemporada = (CasillaTemporada)c;
+            if(c instanceof CasillaSeleccionableTemporada){
+                //Si esta disponible en la lista de casillas entonces será seleccionada
+                if(((CasillaSeleccionableTemporada)c).getTemporada().getId() == temporada.getId())
+                    seleccionarTemporada((CasillaSeleccionableTemporada)c);
             }
         }
-        //Si existe entonces será seleccionado
-        if(panelTemporada != null)
-            seleccionarTemporada(panelTemporada);
     }
     
+    //Recarga la lista de entrenamientos y reselecciona el enviado como parámetro si aún existe
     private void recargarEntrenamientos(Entrenamiento entrenamiento){
+        //Renueva la lista de entrenamientos
         addEntrenamientos(GestorBaseDatos.getEntrenamientos(entrenamiento.getIdTemporada()));
-        CasillaEntrenamiento panelEntrenamiento = null; //Casilla que será seleccionada en la nueva lista
         
-        //Para seleccionar el nuevo panel habrá que buscarlo en la lista de paneles de entrenamientos
+        //Recorre la lista de entrenamientos en busca del entrenamiento indicado
         for(Component c : panelListaEntrenamientos.getComponents()){
-            if(c instanceof CasillaEntrenamiento){
-                //cuando el entrenamientode la lista coincida con el entrenamiento anteriormente seleccionado
-                if(((CasillaEntrenamiento)c).getEntrenamiento().getId() == entrenamiento.getId())
-                panelEntrenamiento = (CasillaEntrenamiento)c;
+            if(c instanceof CasillaSeleccionableEntrenamiento){
+                //Si esta disponible en la lista de casillas entonces será seleccionado
+                if(((CasillaSeleccionableEntrenamiento)c).getEntrenamiento().getId() == entrenamiento.getId())
+                seleccionarEntrenamiento((CasillaSeleccionableEntrenamiento)c);
             }
         }
-        //Si existe entonces será seleccionado
-        if(panelEntrenamiento != null)
-            seleccionarEntrenamiento(panelEntrenamiento);
-
     }
     
+    //Recarga la lista de ejercicios y reselecciona el el enviado como parámetro si aún existe
     private void recargarEjercicios(Ejercicio ejercicio){
+        //Renueva la lista de ejercicios
         addEjercicios(GestorBaseDatos.getEjercicios(ejercicio.getIdEntrenamiento()));
-        CasillaEjercicio panelEjercicio = null; //Casilla que será seleccionada en la nueva lista
         
-        //Para seleccionar el nuevo panel habrá que buscarlo en la lista de paneles de ejercicios
+        //Recorre la lista de ejercicios en busca del ejercicio indicado
         for(Component c : panelListaEjercicios.getComponents()){
-            if(c instanceof CasillaEjercicio){
-                //cuando el ehercicio de la lista coincida con el ejercicio anteriormente seleccionado
-                if(((CasillaEjercicio)c).getEjercicio().getId() == ejercicio.getId())
-                panelEjercicio = (CasillaEjercicio)c;
+            if(c instanceof CasillaSeleccionableEjercicio){
+                //Si esta disponible en la lista de casillas entonces será seleccionado
+                if(((CasillaSeleccionableEjercicio)c).getEjercicio().getId() == ejercicio.getId())
+                seleccionarEjercicio((CasillaSeleccionableEjercicio)c);
             }
         }
-        //Si existe entonces será seleccionado
-        if(panelEjercicio != null)
-            seleccionarEjercicio(panelEjercicio);
     }
     
+    //Recarga la lista de series y reselecciona la enviada como parámetro si aún existe
     private void recargarSeries(Serie serie){
+        //Renueva la lista de series
         addSeries(GestorBaseDatos.getSeries(serie.getIdEjercicio()));
-        CasillaSerie panelSerie = null; //Casilla que será seleccionada en la nueva lista
         
-        //Para seleccionar el nuevo panel habrá que buscarlo en la lista de paneles de series
+        //Recorre la lista de series en busca de la serie indicada
         for(Component c : panelListaSeries.getComponents()){
-            if(c instanceof CasillaSerie){
-                //cuando la serie de la lista coincida con la serie anteriormente seleccionada
-                if(((CasillaSerie)c).getSerie().equals(serie))
-                panelSerie = (CasillaSerie)c;
+            if(c instanceof CasillaSeleccionableSerie){
+                //Si esta disponible en la lista de casillas entonces será seleccionada
+                if(((CasillaSeleccionableSerie)c).getSerie().equals(serie))
+                seleccionarSerie((CasillaSeleccionableSerie)c);
             }
         }
-        //Si existe entonces será seleccionado
-        if(panelSerie != null)
-            seleccionarSerie(panelSerie);
     }
     
+    //Bloquea o desbloquea los campos y subpaneles del panel temporada
     private void setEnabledPanelTemporada(boolean b ){
         
+        //True desbloquea los campos del panel y false los bloquea
         btnAnnadirEntrenamiento.setEnabled(b);
         btnGuardarTemporada.setEnabled(b);
         txtFechaInicio.setEnabled(b);
         txtDescripcionTemporada.setEnabled(b);
-        
+        //Si es true usa los colores por defecto
         if(b){
             panelEntrenamiento.setBackground(new Color(180, 160, 255));
             scrollEntrenamientos.setBackground(new Color(100, 80, 180));
             panelListaEntrenamientos.setBackground(Color.WHITE);
             txtFechaInicio.setBackground(Color.WHITE);
             txtDescripcionTemporada.setBackground(Color.WHITE);
+        //Si es false usa colores que indican bloqueo
         }else{
             panelEntrenamiento.setBackground(new Color(100, 80, 180));
             scrollEntrenamientos.setBackground(new Color(20, 0, 105));
@@ -1111,17 +1168,20 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
             txtFechaInicio.setBackground(Color.GRAY);
             txtDescripcionTemporada.setBackground(Color.GRAY);
         }
+        //Siempre se bloquearan los subpaneles 
         setEnabledPanelEntrenamiento(false);
     }
     
+    //Bloquea o desbloquea los campos y subpaneles del panel entrenamiento
     private void setEnabledPanelEntrenamiento(boolean b ){
         
+        //True desbloquea los campos del panel y false los bloquea
         btnAnnadirEjercicio.setEnabled(b);
         btnGuardarEntrenamiento.setEnabled(b);
         txtFecha.setEnabled(b);
         txtPesoCorporal.setEnabled(b);
         txtDescripcionEntrenamiento.setEnabled(b);
-        
+        //Si es true usa los colores por defecto
         if(b){
             panelEjercicio.setBackground(new Color(180, 160, 255));
             scrollEjercicios.setBackground(new Color(100, 80, 180));
@@ -1129,6 +1189,7 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
             txtFecha.setBackground(Color.WHITE);
             txtPesoCorporal.setBackground(Color.WHITE);
             txtDescripcionEntrenamiento.setBackground(Color.WHITE);
+        //Si es false usa colores que indican bloqueo
         }else{
             panelEjercicio.setBackground(new Color(100, 80, 180));
             scrollEjercicios.setBackground(new Color(20, 0, 105));
@@ -1137,17 +1198,20 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
             txtPesoCorporal.setBackground(Color.GRAY);
             txtDescripcionEntrenamiento.setBackground(Color.GRAY);
         }
+        //Siempre se bloquearan los subpaneles 
         setEnabledPanelEjercicio(false);
     }
     
+    //Bloquea o desbloquea los campos y subpaneles del panel ejercicio
     private void setEnabledPanelEjercicio(boolean b ){
         
+        //True desbloquea los campos del panel y false los bloquea
         btnAnnadirSerie.setEnabled(b);
         btnGuardarEjercicio.setEnabled(b);
         txtNombre.setEnabled(b);
         txtVariante.setEnabled(b);
         txtDescripcionEjercicio.setEnabled(b);
-
+        //Si es true usa los colores por defecto
         if(b){
             panelSerie.setBackground(new Color(180, 160, 255));
             scrollSeries.setBackground(new Color(100, 80, 180));
@@ -1155,6 +1219,7 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
             txtNombre.setBackground(Color.WHITE);
             txtVariante.setBackground(Color.WHITE);
             txtDescripcionEjercicio.setBackground(Color.WHITE);
+        //Si es false usa colores que indican bloqueo
         }else{
             panelSerie.setBackground(new Color(100, 80, 180));
             scrollSeries.setBackground(new Color(20, 0, 105));
@@ -1163,20 +1228,25 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
             txtVariante.setBackground(Color.GRAY);
             txtDescripcionEjercicio.setBackground(Color.GRAY);
         }
+        //Siempre se bloquearan los subpaneles 
         setEnabledPanelSerie(false);
     }
     
-        private void setEnabledPanelSerie(boolean b ){
+    //Bloquea o desbloquea los campos y subpaneles del panel de series
+    private void setEnabledPanelSerie(boolean b ){
         
+        //True desbloquea los campos del panel y false los bloquea
         btnclonarSerie.setEnabled(b);
         btnGuardarSerie.setEnabled(b);
         txtPeso.setEnabled(b);
         txtRepeticiones.setEnabled(b);
         txtExtra.setEnabled(b);
+        //Si es true usa los colores por defecto
         if(b){
             txtPeso.setBackground(Color.WHITE);
             txtRepeticiones.setBackground(Color.WHITE);
             txtExtra.setBackground(Color.WHITE);
+        //Si es false usa colores que indican bloqueo
         }else{
             txtPeso.setBackground(Color.GRAY);
             txtRepeticiones.setBackground(Color.GRAY);

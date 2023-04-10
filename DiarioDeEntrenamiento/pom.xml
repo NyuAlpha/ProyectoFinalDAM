@@ -19,7 +19,7 @@
     <configuration>
         <archive>
             <manifest>
-                <mainClass>com.mycompany.diariodeentrenamiento.InterfazUsuario</mainClass>
+                <mainClass>com.mycompany.diariodeentrenamiento.VentanaPrincipal</mainClass>
             </manifest>
         </archive>
         <descriptorRefs>
@@ -36,6 +36,7 @@
     </executions>
 </plugin>
     </plugins>
+
   </build>
     
         <dependencies>
