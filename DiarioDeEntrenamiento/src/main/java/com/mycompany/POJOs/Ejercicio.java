@@ -128,7 +128,7 @@ public class Ejercicio implements Entidad{
         
         //Añade los extras de cada serie al final del ejercicio
         for(Serie s : series){
-            String ex = (s.getExtra() == null || s.getExtra().isEmpty())?  "" : ("(" +s.getNumSerie() +": " +  s.getExtra() + ")");
+            String ex = (s.getExtra() == null || s.getExtra().isEmpty())?  "" : ("(" +s.getNumSerie() +"ª: " +  s.getExtra() + ")");
             stringBuilder.append(ex);
         }
         //devuelve la cadena con la información de las series

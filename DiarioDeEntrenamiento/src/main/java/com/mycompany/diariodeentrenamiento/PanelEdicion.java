@@ -1038,15 +1038,23 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
         try{
             Date fecha = Date.valueOf(txtFecha.getText());
             float pesoCorporal = Float.parseFloat(txtPesoCorporal.getText());
-            entrenamiento.setFecha(fecha);
-            entrenamiento.setPesoCorporal(pesoCorporal);  
-            entrenamiento.setDescripcion(txtDescripcionEntrenamiento.getText());
-            //Actualiza en la base de datos
-            GestorBaseDatos.actualizarEntrenamiento(entrenamiento);
-            //La temporada debe actualizarse para comprobar si la fecha más reciente ha cambiado
-            actualizarTemporada();
-            //Recarga la lista de entrenamientos y reselecciona el entrenamiento actualizado
-            recargarEntrenamientos(entrenamiento);
+            
+            //Si el peso corporal esta dentro de unos límites
+            if( pesoCorporal >= 0 || pesoCorporal <= 1000){
+                entrenamiento.setFecha(fecha);
+                entrenamiento.setPesoCorporal(pesoCorporal);  
+                entrenamiento.setDescripcion(txtDescripcionEntrenamiento.getText());
+                //Actualiza en la base de datos
+                GestorBaseDatos.actualizarEntrenamiento(entrenamiento);
+                //La temporada debe actualizarse para comprobar si la fecha más reciente ha cambiado
+                actualizarTemporada();
+                //Recarga la lista de entrenamientos y reselecciona el entrenamiento actualizado
+                recargarEntrenamientos(entrenamiento);
+            }
+            //En caso contrario excepción la cual saltará directamente al bloque catch
+            else{
+                throw new IllegalArgumentException();
+            }
         }
         catch(java.lang.IllegalArgumentException iae){
             JOptionPane.showMessageDialog(this, "La fecha o el peso introducido es erroneo", "Formato erroneo",JOptionPane.WARNING_MESSAGE );
@@ -1072,13 +1080,20 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
         try{
             float peso = Float.parseFloat(txtPeso.getText());
             int repeticiones = Integer.parseInt(txtRepeticiones.getText());
-            serie.setPeso(peso);
-            serie.setRepeticiones(repeticiones);
-            serie.setExtra(txtExtra.getText());
-            //Actualiza en la base de datos
-            GestorBaseDatos.actualizarSerie(serie);
-            //Recarga la lista de series y reselecciona la serie que ha sido actualizada
-            recargarSeries(serie);
+            //Si los valores estan dentro de sus límites razonables serán actualizados. 
+            if( peso <=  1000 || peso >= 0 || repeticiones >= 0 || repeticiones <= 200 ){
+                serie.setPeso(peso);
+                serie.setRepeticiones(repeticiones);
+                serie.setExtra(txtExtra.getText());
+                //Actualiza en la base de datos
+                GestorBaseDatos.actualizarSerie(serie);
+                //Recarga la lista de series y reselecciona la serie que ha sido actualizada
+                recargarSeries(serie);
+            }
+            //En caso contrario excepción la cual saltará directamente al bloque catch
+            else{
+                throw new IllegalArgumentException();
+            }
         }
         catch(java.lang.IllegalArgumentException iae){
             JOptionPane.showMessageDialog(this, "Peso o repeticiones incorrectos", "Formato erroneo",JOptionPane.WARNING_MESSAGE );

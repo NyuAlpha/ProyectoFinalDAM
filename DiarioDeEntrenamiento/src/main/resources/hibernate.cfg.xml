@@ -3,9 +3,7 @@
 		    "-//Hibernate/Hibernate Configuration DTD//EN"
     "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
-
-    <session-factory>
-    
+    <session-factory>  
     	<!-- Información básica de la base de datos de conexión de Hibernate-->
     	<property name="connection.username">usuario</property>
     	<property name="connection.driver_class">org.h2.Driver</property>
@@ -17,10 +15,7 @@
         <mapping resource="entrenamiento.hbm.xml"/>
         <mapping resource="ejercicio.hbm.xml"/>
         <mapping resource="serie.hbm.xml"/>
-        
-
     </session-factory>
-
 </hibernate-configuration>
 
 
