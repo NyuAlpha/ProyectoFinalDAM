@@ -3,6 +3,7 @@ com\mycompany\diariodeentrenamiento\PanelEdicion$7.class
 com\mycompany\diariodeentrenamiento\PanelEdicion$2.class
 com\mycompany\diariodeentrenamiento\CasillaSeleccionableTemporada.class
 com\mycompany\diariodeentrenamiento\PanelBusqueda$2.class
+com\mycompany\POJOs\Entidad.class
 com\mycompany\POJOs\Ejercicio.class
 com\mycompany\diariodeentrenamiento\CasillaSeleccionableEntrenamiento.class
 com\mycompany\diariodeentrenamiento\PanelEdicion.class

@@ -157,10 +157,16 @@ public class LogicaBusqueda {
         }
     }
 
-    public void setPesoCorporalMinimo(String pesoCorporalMinimo) {
+    public void setPesoCorporalMinimo(String pesoCorporalMinimo){
         if(!pesoCorporalMinimo.equals("")){       
             try{
-                this.pesoCorporalMinimo = String.valueOf(Float.parseFloat(pesoCorporalMinimo));
+                Float p = Float.parseFloat(pesoCorporalMinimo);
+                if(p < 0 || p > 1000){
+                    throw new IllegalArgumentException();
+                }
+                else
+                    this.pesoCorporalMinimo = String.valueOf(p);
+
             }catch(java.lang.IllegalArgumentException e){
                 JOptionPane.showMessageDialog(new JPanel(), "Peso corporal mínimo incorrecto", "Formato erroneo",JOptionPane.WARNING_MESSAGE );
             }
@@ -170,7 +176,12 @@ public class LogicaBusqueda {
     public void setPesoCorporalMaximo(String pesoCorporalMaximo) {
         if(!pesoCorporalMaximo.equals("")){
             try{
-                this.pesoCorporalMaximo = String.valueOf(Float.parseFloat(pesoCorporalMaximo));
+                Float p = Float.parseFloat(pesoCorporalMaximo);
+                if(p < 0 || p > 1000){
+                    throw new IllegalArgumentException();
+                }
+                else
+                    this.pesoCorporalMaximo = String.valueOf(p);
             }catch(java.lang.IllegalArgumentException e){
                 JOptionPane.showMessageDialog(new JPanel(), "Peso corporal máximo incorrecto", "Formato erroneo",JOptionPane.WARNING_MESSAGE );
             }
@@ -180,7 +191,12 @@ public class LogicaBusqueda {
     public void setPesoMinimo(String pesoMinimo) {
         if(!pesoMinimo.equals("")){
             try{
-                this.pesoMinimo = String.valueOf(Float.parseFloat(pesoMinimo));
+                Float p = Float.parseFloat(pesoMinimo);
+                if(p < 0 || p > 1000){
+                    throw new IllegalArgumentException();
+                }
+                else
+                    this.pesoMinimo = String.valueOf(p);
             }catch(java.lang.IllegalArgumentException e){
                 JOptionPane.showMessageDialog(new JPanel(), "Peso mínimo incorrecto", "Formato erroneo",JOptionPane.WARNING_MESSAGE );
             }
@@ -190,7 +206,12 @@ public class LogicaBusqueda {
     public void setPesoMaximo(String pesoMaximo) {
         if(!pesoMaximo.equals("")){
             try{
-                this.pesoMaximo = String.valueOf(Float.parseFloat(pesoMaximo));
+                Float p = Float.parseFloat(pesoMaximo);
+                if(p < 0 || p > 1000){
+                    throw new IllegalArgumentException();
+                }
+                else
+                    this.pesoMaximo = String.valueOf(p);
             }catch(java.lang.IllegalArgumentException e){
                 JOptionPane.showMessageDialog(new JPanel(), "Peso máximo incorrecto", "Formato erroneo",JOptionPane.WARNING_MESSAGE );
             }

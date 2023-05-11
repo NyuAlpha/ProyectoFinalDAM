@@ -841,9 +841,8 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
         //Así que las recarga todas sin más, no llama al metodo recargar series
         addSeries(GestorBaseDatos.getSeries(casillaEliminada.getSerie().getIdEjercicio()));
         setEnabledPanelSerie(false);//desactiva el panel de formulario de serie
-        //Además si la serie seleccionada es la serie eliminada, la serie seleccionada se anula.
-        if(serieSeleccionada.equals(panelSerie))
-            serieSeleccionada = null;
+        //Además si habia una serie seleccionada quedará sin seleccionar, así se evitan conflictos
+        serieSeleccionada = null;
     }
     
     //Añade temporadas en forma de casillas seleccionables, enviandole como parámetro la lista de temporadas
@@ -1040,7 +1039,7 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
             float pesoCorporal = Float.parseFloat(txtPesoCorporal.getText());
             
             //Si el peso corporal esta dentro de unos límites
-            if( pesoCorporal >= 0 || pesoCorporal <= 1000){
+            if( pesoCorporal >= 0 && pesoCorporal <= 1000){
                 entrenamiento.setFecha(fecha);
                 entrenamiento.setPesoCorporal(pesoCorporal);  
                 entrenamiento.setDescripcion(txtDescripcionEntrenamiento.getText());
@@ -1081,7 +1080,7 @@ public class PanelEdicion extends JSplitPane implements MouseListener{
             float peso = Float.parseFloat(txtPeso.getText());
             int repeticiones = Integer.parseInt(txtRepeticiones.getText());
             //Si los valores estan dentro de sus límites razonables serán actualizados. 
-            if( peso <=  1000 || peso >= 0 || repeticiones >= 0 || repeticiones <= 200 ){
+            if( peso <=  1000 && peso >= 0 && repeticiones >= 0 && repeticiones <= 200 ){
                 serie.setPeso(peso);
                 serie.setRepeticiones(repeticiones);
                 serie.setExtra(txtExtra.getText());
